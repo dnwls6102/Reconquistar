@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _animations:
   - name: attack
-    data: {fileID: 11400000, guid: 18eeefb3724dcba4ea932dc0a22c2b7e, type: 2}
+    data: {fileID: 11400000, guid: d182f919edf83724ca329b6f2a7358e6, type: 2}
   - name: idle
-    data: {fileID: 11400000, guid: 4c4310b24aa79c941a56a41a1958a70d, type: 2}
+    data: {fileID: 11400000, guid: d182f919edf83724ca329b6f2a7358e6, type: 2}
   - name: walk
-    data: {fileID: 11400000, guid: 27492c4ea83e2c0488843d91acc616b6, type: 2}
+    data: {fileID: 11400000, guid: d182f919edf83724ca329b6f2a7358e6, type: 2}
