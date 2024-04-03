@@ -71,7 +71,7 @@ MonoBehaviour:
   Sorting:
     StaticSorting: 0
     SortingIndex: 0
-    SortingLayer: 0
+    SortingLayer: 1193689057
 --- !u!114 &6363143419347734623
 MonoBehaviour:
   m_ObjectHideFlags: 0
