@@ -23,7 +23,7 @@ namespace _1.Scripts.DOTS.System
         {
             state.Enabled = false;
             var SampleSpawner = SystemAPI.GetSingleton<SampleSpawnData>();
-            
+
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var SampleUnits = new NativeArray<Entity>(SampleSpawner.number, Allocator.Temp);
             ecb.Instantiate(SampleSpawner.SampleEntityPrefab, SampleUnits);
@@ -51,17 +51,17 @@ namespace _1.Scripts.DOTS.System
                 ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                 ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
                 ecb.SetComponentEnabled<LazyTag>(SampleUnit, false);
-                
+
                 ecb.SetComponent(SampleUnit, new LocalTransform()
                 {
-                    Position = new float3 (x, y*mapMaker.width, 0),
+                    Position = new float3(x, y * mapMaker.width, 0),
                     Scale = 5
                 });
-                
+
                 //새로 생성한 유닛 타일 점거
-                MapTileAuthoringComponentData currentTile = tiles[x + mapMaker.number * y];
+                MapTileAuthoringComponentData currentTile = tiles[x * mapMaker.number + y];
                 currentTile.soldier = 1;
-                tiles[x + mapMaker.number * y] = currentTile;
+                tiles[x * mapMaker.number + y] = currentTile;
 
                 if (y < mapMaker.number - 1)
                 {
@@ -73,18 +73,21 @@ namespace _1.Scripts.DOTS.System
                     if (x < 6)
                     {
                         x++;
-                    }else if (x == 6)
+                    }
+                    else if (x == 6)
                     {
                         x = 99;
-                    }else if (x > 6)
+                    }
+                    else if (x > 6)
                     {
                         x--;
                     }
                 }
-                if(x>=50){
+                if (x >= 50)
+                {
                     newteam = 1;
                 }
-                
+
             }
             ecb.Playback(state.EntityManager);
             tileQuery.CopyFromComponentDataArray(tiles);

@@ -76,7 +76,7 @@ namespace _1.Scripts.DOTS.System
                 sampleUnits.Dispose();
 
                 //타일 배열
-                //인덱스가 (3, 5)인 타일 = tiles[3 + 5 * mapMaker.number]
+                //인덱스가 (3, 5)인 타일 = tiles[3 + 5 * mapMaker.number] => 세로로 바뀌었으니까 tiles[3 * number + 5] 일듯?
                 NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
 
                 //체력 감소
@@ -96,7 +96,7 @@ namespace _1.Scripts.DOTS.System
                     }
                 }
                 ecb.Playback(state.EntityManager);
-                
+
                 NativeArray<int2> moves = new(2, Allocator.Temp);
                 //Attack을 하지 않은 유닛들이 순차적으로 이동
                 for (int i = 0; i < 2; i++)
@@ -107,7 +107,7 @@ namespace _1.Scripts.DOTS.System
                         if (!state.EntityManager.Exists(target.ValueRO.targetEntity)
                             || !SystemAPI.HasComponent<SampleUnitComponentData>(target.ValueRO.targetEntity))
                             continue;
-                        
+
                         int2 targetIndex = SystemAPI.GetComponentRO<SampleUnitComponentData>(target.ValueRO.targetEntity).ValueRO.index;
                         int dx = targetIndex.x - unit.ValueRO.index.x;
                         int dy = targetIndex.y - unit.ValueRO.index.y;
@@ -115,8 +115,10 @@ namespace _1.Scripts.DOTS.System
                         moves[1] = new int2(0, (int)math.sign(dy));
                         int2 unitIndex = unit.ValueRO.index;
                         RefRW<MapTileAuthoringComponentData> currentTile = SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unitIndex.x + unitIndex.y * mapMaker.number]);
-                        for(int j=0; j<moves.Length; j++){
-                            if(moves[j].x != 0 || moves[j].y != 0){
+                        for (int j = 0; j < moves.Length; j++)
+                        {
+                            if (moves[j].x != 0 || moves[j].y != 0)
+                            {
                                 RefRW<MapTileAuthoringComponentData> nextTile = SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[(unitIndex.x + moves[j].x) + (unitIndex.y + moves[j].y) * mapMaker.number]);
                                 if (nextTile.ValueRO.soldier == 0)
                                 {
@@ -131,10 +133,10 @@ namespace _1.Scripts.DOTS.System
 
                         if (i == 0 && !SystemAPI.IsComponentEnabled<MovingTag>(entity))
                             SystemAPI.SetComponentEnabled<LazyTag>(entity, true);
-                        else  SystemAPI.SetComponentEnabled<LazyTag>(entity, false);
+                        else SystemAPI.SetComponentEnabled<LazyTag>(entity, false);
                     }
                 }
-                
+
                 tiles.Dispose();
 
                 //테스트용(현재 Attack Tag를 제거하는 로직이 따로 없기 때문에 여기서 바로 제거)
