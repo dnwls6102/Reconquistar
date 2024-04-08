@@ -52,9 +52,9 @@ namespace _1.Scripts.DOTS.System.Jobs
                 );
         }
         //인덱스를 float3 형식으로 바꿔주는 코드
-        public static float3 Int2tofloat3(int2 index)
+        public float3 Int2tofloat3(int2 index) //기존 : static
         {
-            return new float3(index.x, (float)index.y * 1f, 0);
+            return new float3(index.x, (float)index.y * MapMaker.width, 0);
         }
     }
 
