@@ -47,14 +47,14 @@ namespace _1.Scripts.DOTS.System
                     Scale = 1
                 });
 
-                if (y != MapMaker.number - 1)
+                if (x != MapMaker.number - 1)
                 {
-                    y++;
+                    x++;
                 }
                 else
                 {
-                    y = 0;
-                    x++;
+                    x = 0;
+                    y++;
                 }
 
             }

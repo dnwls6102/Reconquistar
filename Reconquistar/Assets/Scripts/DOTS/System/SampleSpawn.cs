@@ -59,9 +59,9 @@ namespace _1.Scripts.DOTS.System
                 });
 
                 //새로 생성한 유닛 타일 점거
-                MapTileAuthoringComponentData currentTile = tiles[x * mapMaker.number + y];
+                MapTileAuthoringComponentData currentTile = tiles[x + mapMaker.number * y];
                 currentTile.soldier = 1;
-                tiles[x * mapMaker.number + y] = currentTile;
+                tiles[x + mapMaker.number * y] = currentTile;
 
                 if (y < mapMaker.number - 1)
                 {
