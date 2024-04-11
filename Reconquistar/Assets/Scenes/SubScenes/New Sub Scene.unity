@@ -211,7 +211,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c3a4aaf9f834113bbe321c1198dda6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MapTilePrefab: {fileID: 2833387626386893320, guid: 17a31b9fe7e9daf4ba6664b2432017b9, type: 3}
+  MapTilePrefab: {fileID: 6586778698883999347, guid: 66df484608a146e48ad54cdf90e536e2, type: 3}
+  SpriteTilePrefab: {fileID: 2833387626386893320, guid: 17a31b9fe7e9daf4ba6664b2432017b9, type: 3}
   number: 100
   width: 0.6
 --- !u!1 &2086172758
@@ -244,7 +245,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sampleUnit: {fileID: 8475687399866159820, guid: d1e8228476a88ce40a58efc1ffbb5771, type: 3}
-  number: 1000
+  number: 1400
   ToggleValue: 0
   startFlag: 0
 --- !u!4 &2086172760

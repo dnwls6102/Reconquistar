@@ -86,7 +86,7 @@ public class ClickSpawn : MonoBehaviour
     private void Spawn()
     {
         MapTileAuthoringComponentData clickedTile = _entityManager.GetComponentData<MapTileAuthoringComponentData>(_targetEntity);
-        Debug.Log($"{_targetEntity.ToString()}");
+        //Debug.Log($"{_targetEntity.ToString()}");
         if (clickedTile.soldier != 0) return;
         MapMakerComponentData mapMaker = _entityManager.CreateEntityQuery(typeof(MapMakerComponentData)).GetSingleton<MapMakerComponentData>();
 

@@ -25,9 +25,9 @@ namespace _1.Scripts.DOTS.System
             // 타일 생성
             var ecb = new EntityCommandBuffer(Allocator.Temp);
             var tiles = new NativeArray<Entity>(MapMaker.number * MapMaker.number, Allocator.Temp);
-            //var spriteTiles = new NativeArray<Entity>(MapMaker.number * MapMaker.number, Allocator.Temp);
+            var spriteTiles = new NativeArray<Entity>(MapMaker.number * MapMaker.number, Allocator.Temp);
             ecb.Instantiate(MapMaker.MapTilePrefab, tiles);
-            //ecb.Instantiate(MapMaker.SpriteTilePrefab, spriteTiles);
+            ecb.Instantiate(MapMaker.SpriteTilePrefab, spriteTiles);
 
             // 타일 정렬
             int x = 0;
@@ -41,20 +41,20 @@ namespace _1.Scripts.DOTS.System
                     soldier = 0,
                 });
 
-                ecb.SetComponent(tiles[i], new LocalTransform()
+                ecb.SetComponent(spriteTiles[i], new LocalTransform()
                 {
                     Position = new float3(x, y * MapMaker.width, 0),
                     Scale = 1
                 });
 
-                if (x != MapMaker.number - 1)
+                if (y != MapMaker.number - 1)
                 {
-                    x++;
+                    y++;
                 }
                 else
                 {
-                    x = 0;
-                    y++;
+                    y = 0;
+                    x++;
                 }
 
             }
