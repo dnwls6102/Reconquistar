@@ -21,13 +21,14 @@ namespace _1.Scripts.DOTS.System.Jobs
         // excute 쿼리에 moving tag 추가 예정
         public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
+            // MovingTag를 달고 있는 Unit의 transform이 Unit의 목표지점(destIndex)와 같을 경우?
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
                 // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
-                movingTag.ValueRW = false;
+                movingTag.ValueRW = false; //Unit의 index 정보를 destIndex로 바꾸고 movingTag 없애기
             }
-            else
+            else // 아직 일치하지 않을 경우
             {
                 transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex), Time * sampleUnitComponentData.movementspeed);
                 //Debug.Log("Moving entity" + sampleUnitComponentData.index);
@@ -52,9 +53,9 @@ namespace _1.Scripts.DOTS.System.Jobs
                 );
         }
         //인덱스를 float3 형식으로 바꿔주는 코드
-        public static float3 Int2tofloat3(int2 index)
+        public float3 Int2tofloat3(int2 index) //기존 : static
         {
-            return new float3(index.x, (float)index.y * 0.6f, 0);
+            return new float3(index.x, (float)index.y * MapMaker.width, 0);
         }
     }
 
