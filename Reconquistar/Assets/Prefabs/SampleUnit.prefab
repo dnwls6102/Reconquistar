@@ -70,7 +70,7 @@ MonoBehaviour:
   RenderSettings:
     Pivot:
       x: 0.5
-      y: 0.5
+      y: 0
     Size:
       x: 1
       y: 1
