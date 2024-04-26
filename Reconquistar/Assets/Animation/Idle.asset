@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dc460e3eaeb97f48b48aa09fa988f09, type: 3}
   m_Name: Idle
   m_EditorClassIdentifier: 
-  SpriteSheet: {fileID: 21300000, guid: 4acdb7468c336364398de221e3c23529, type: 3}
+  SpriteSheet: {fileID: 21300000, guid: 6cc3f97f790ab164d8aa6fdeb7fb485c, type: 3}
   FrameCount:
-    x: 1
+    x: 30
     y: 1
   FrameRange:
     Offset: 0
