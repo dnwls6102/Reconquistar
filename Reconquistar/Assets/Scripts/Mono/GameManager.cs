@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     private int playerNum = 1;
     private int currentPlayer;
     private int diceResult;
-    private bool isRolled;
+    public static bool isRolled;
+    public static bool isMoving;
     private Player[] players;
 
     private void Start()
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
         InitializePlayers();
         currentPlayer = 0;
         isRolled = false;
+        isMoving = false;
     }
 
     private void InitializePlayers()
@@ -39,24 +41,24 @@ public class GameManager : MonoBehaviour
             Debug.Log(diceResult);
         }
 
-        else if (isRolled)
+        else if (isRolled && !isMoving)
         {
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
-                players[currentPlayer].MoveCell(diceResult, false);
-                isRolled = false;
+                isMoving = true;
+                StartCoroutine(players[currentPlayer].PlayerMove(diceResult, false));
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
-                players[currentPlayer].MoveCell(diceResult, true);
-                isRolled = false;
+                isMoving = true;
+                StartCoroutine(players[currentPlayer].PlayerMove(diceResult, true));
             }
         }
     }
 
     private int RollDice()
     {
-        int n = Random.Range(1, 4);
+        int n = Random.Range(1, 7);
         isRolled = true;
         return n;
     }
