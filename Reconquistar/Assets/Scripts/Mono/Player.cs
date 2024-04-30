@@ -6,12 +6,14 @@ public class Player : MonoBehaviour
 {
     private int boardLength;
     private int currentCellIndex;
-    SpriteRenderer sr;
+    private SpriteRenderer sr;
+    private GameObject arrow;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         boardLength = GameBoard.cellAxis.Length;
+        arrow = transform.GetChild(0).gameObject;
     }
 
     public void SetCellIndex(int index)
@@ -19,14 +21,6 @@ public class Player : MonoBehaviour
         currentCellIndex = index;
         transform.position = GameBoard.cellAxis[currentCellIndex];
     }
-
-    // public void MoveCell(int distance, bool clockwise)
-    // {
-    //     if (!clockwise) distance *= -1;
-    //     currentCellIndex = (currentCellIndex + boardLength + distance) % boardLength;
-
-    //     transform.position = GameBoard.cellAxis[currentCellIndex];
-    // }
 
     public IEnumerator PlayerMove(int distance, bool clockwise)
     {
@@ -40,8 +34,6 @@ public class Player : MonoBehaviour
         }
 
         transform.position = GameBoard.cellAxis[currentCellIndex];
-        GameManager.isMoving = false;
-        GameManager.isRolled = false;
     }
 
     private IEnumerator MoveToNextTile(Vector3 end)
@@ -61,5 +53,10 @@ public class Player : MonoBehaviour
         }
 
         transform.position = end;
+    }
+
+    public void SetArrow(bool display)
+    {
+        arrow.SetActive(display);
     }
 }

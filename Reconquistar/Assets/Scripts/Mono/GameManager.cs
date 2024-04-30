@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
 
-    private int playerNum = 1;
+    private int playerNum = 4;
     private int currentPlayer;
     public static bool isRolled;
     public static bool isMoving;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
         currentPlayer = 0;
         isRolled = false;
         isMoving = false;
+        players[currentPlayer].SetArrow(true);
     }
 
     private void InitializePlayers()
@@ -27,7 +29,7 @@ public class GameManager : MonoBehaviour
         {
             GameObject playerObject = Instantiate(PlayerPrefab);
             Player player = playerObject.GetComponent<Player>();
-            player.SetCellIndex(i);
+            player.SetCellIndex(i * GameBoard.tilePerLine);
             players[i] = player;
         }
     }
@@ -44,13 +46,30 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.LeftArrow))
             {
                 isMoving = true;
-                StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, false));
+                StartCoroutine(PlayerTurn(false));
             }
             else if (Input.GetKeyDown(KeyCode.RightArrow))
             {
                 isMoving = true;
-                StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, true));
+                StartCoroutine(PlayerTurn(true));
             }
         }
+    }
+
+    private IEnumerator PlayerTurn(bool clockwise)
+    {
+        yield return StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, clockwise));
+        
+        isMoving = false;
+        isRolled = false;
+
+        NextTurn();
+    }
+
+    private void NextTurn()
+    {
+        players[currentPlayer].SetArrow(false);
+        currentPlayer = (currentPlayer + 1) % playerNum;
+        players[currentPlayer].SetArrow(true);
     }
 }

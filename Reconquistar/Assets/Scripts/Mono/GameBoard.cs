@@ -12,7 +12,7 @@ public class GameBoard : MonoBehaviour
 
     [SerializeField] private GameObject MapTile;
 
-    private int tilePerLine;
+    public static int tilePerLine;
 
     GameBoard()
     {
