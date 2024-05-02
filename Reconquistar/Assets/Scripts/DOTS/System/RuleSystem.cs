@@ -24,7 +24,7 @@ namespace _1.Scripts.DOTS.System
 
         ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
         ComponentLookup<StartPause> startLookup;
-        ComponentLookup<TargetEntityData> targetEntityLookup;
+        //ComponentLookup<TargetEntityData> targetEntityLookup;
         //ComponentLookup<Flip> flipLookup;
 
         [BurstCompile]
@@ -41,7 +41,7 @@ namespace _1.Scripts.DOTS.System
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
             sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
-            targetEntityLookup = state.GetComponentLookup<TargetEntityData>(true);
+            //targetEntityLookup = state.GetComponentLookup<TargetEntityData>(true);
             //flipLookup = state.GetComponentLookup<Flip>(true);
             //priorityMovingTagLookup = state.GetComponentLookUp<
             startLookup = state.GetComponentLookup<StartPause>(true);
@@ -82,9 +82,9 @@ namespace _1.Scripts.DOTS.System
                 FindPriorityMoveJob findPMoveJob = new() //자유 이동 태그 유닛을 위한 findNearestJob
                 {
                     MapMaker = mapMaker,
-                    PMoveUnits = pMoveUnits,
+                    SampleUnits = sampleUnits,
                     SampleUnitComponents = sampleUnitLookup,
-                    TargetEntityComponents = targetEntityLookup,
+                    //TargetEntityComponents = targetEntityLookup,
                     //FlipComponents = flipLookup, //컴포넌트룩업은 엔티티의 샘플유닛 컴포넌트 인스턴스를 뽑아오기 위함이니 재활용
                 };
                 findPMoveJob.ScheduleParallel();
@@ -92,9 +92,6 @@ namespace _1.Scripts.DOTS.System
                 pMoveUnits.Dispose();
 
                 //Debug.Log("자유 이동 분기 작동");
-
-                //MovementJob을 재활용? 아니면 새로운 priorityMovementJob을 만들기?
-                //새로운 priorityMovementJob을 만들 경우 별도의 System파일도 만들어야함
 
                 for (int i = 0; i < 2; i++)
                 {

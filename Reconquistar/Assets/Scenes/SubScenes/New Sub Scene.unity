@@ -245,7 +245,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sampleUnit: {fileID: 8475687399866159820, guid: d1e8228476a88ce40a58efc1ffbb5771, type: 3}
+  samplePMoveUnit: {fileID: 8475687399866159820, guid: 15759b19641db334e86622331218efef, type: 3}
   number: 1400
+  pMoveNum: 200
   ToggleValue: 0
   startFlag: 0
 --- !u!4 &2086172760

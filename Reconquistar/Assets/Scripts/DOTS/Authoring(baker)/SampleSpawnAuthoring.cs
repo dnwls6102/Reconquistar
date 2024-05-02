@@ -6,7 +6,9 @@ namespace _1.Scripts.DOTS.Authoring_baker_
     public class SampleSpawnAuthoring : MonoBehaviour
     {
         public GameObject sampleUnit;
+        public GameObject samplePMoveUnit;
         public int number;
+        public int pMoveNum;
         public int ToggleValue = 0;
         public int startFlag = 0;
         public class SampleSpawnAuthoringBaker : Baker<SampleSpawnAuthoring>
@@ -18,6 +20,11 @@ namespace _1.Scripts.DOTS.Authoring_baker_
                 {
                     SampleEntityPrefab = GetEntity(authoring.sampleUnit, TransformUsageFlags.Dynamic),
                     number = authoring.number,
+                });
+                AddComponent(entity, new SamplePMoveSpawnData()
+                {
+                    SamplePMoveEntityPrefab = GetEntity(authoring.samplePMoveUnit, TransformUsageFlags.Dynamic),
+                    PMoveNumber = authoring.pMoveNum,
                 });
                 AddComponent(entity, new WhattoSpawn()
                 {
@@ -36,6 +43,12 @@ namespace _1.Scripts.DOTS.Authoring_baker_
         public Entity SampleEntityPrefab;
         //타일맵 가로 세로 갯수
         public int number;
+    }
+
+    public struct SamplePMoveSpawnData : IComponentData
+    {
+        public Entity SamplePMoveEntityPrefab;
+        public int PMoveNumber;
     }
 
     public struct WhattoSpawn : IComponentData //Mono로부터 ToggleValue를 받아내기 위한 컴포넌트
