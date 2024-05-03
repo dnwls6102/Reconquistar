@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GameManager : MonoBehaviour
     public static bool isRolled;
     public static bool isMoving;
     private Player[] players;
+
+    [SerializeField] private Button ClockwiseBtn;
+    [SerializeField] private Button CounterClockwiseBtn;
 
     private void Start()
     {
@@ -41,25 +45,37 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Dice.Instance.RollDice());
         }
 
-        else if (isRolled && !isMoving)
+        // else if (isRolled && !isMoving)
+        // {
+        //     if (Input.GetKeyDown(KeyCode.LeftArrow))
+        //     {
+        // isMoving = true;
+        //         StartCoroutine(PlayerTurn(false));
+        //     }
+        //     else if (Input.GetKeyDown(KeyCode.RightArrow))
+        //     {
+        //         isMoving = true;
+        //         StartCoroutine(PlayerTurn(true));
+        //     }
+        // }
+    }
+
+    public void ArrowBtnClick(bool clockwise)
+    {
+        if (!isRolled || isMoving)
         {
-            if (Input.GetKeyDown(KeyCode.LeftArrow))
-            {
-                isMoving = true;
-                StartCoroutine(PlayerTurn(false));
-            }
-            else if (Input.GetKeyDown(KeyCode.RightArrow))
-            {
-                isMoving = true;
-                StartCoroutine(PlayerTurn(true));
-            }
+            Debug.Log("이동 중이거나 주사위를 굴리지 않았습니다.");
+            return;
         }
+        
+        isMoving = true;
+        StartCoroutine(PlayerTurn(clockwise));
     }
 
     private IEnumerator PlayerTurn(bool clockwise)
     {
         yield return StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, clockwise));
-        
+
         isMoving = false;
         isRolled = false;
 
