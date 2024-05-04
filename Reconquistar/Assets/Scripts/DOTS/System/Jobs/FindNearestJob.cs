@@ -32,7 +32,7 @@ namespace _1.Scripts.DOTS.System.Jobs
                 if (SampleUnitComponents[SampleUnits[i]].team != currentUnit.team) //전체 유닛들 중 i번째 인덱스를 가진 유닛의 팀과 현재 유닛의 팀이 다를경우
                 {
                     float newDist = math.distancesq(currentUnit.index, SampleUnitComponents[SampleUnits[i]].index); //해당 유닛과 현재 유닛의 거리 측정
-                    if (newDist < dist) // dist가 newDist보다 클 경우 (주: 처음 측정의 경우 반드시 작동하게 해야해서 math.INFINITY로 설정한 것)
+                    if (newDist < dist) // dist가 newDist보다 클 경우 (주: 현재는 디버깅을 위해 반드시 작동하게 해야해서 math.INFINITY로 설정한 것)
                     {
                         dist = newDist; // dist = newDist
                         targetIndex = SampleUnitComponents[SampleUnits[i]].index; // targetIndex를 해당 유닛의 index로 변경
