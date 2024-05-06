@@ -74,4 +74,13 @@ public class Player : MonoBehaviour
     {
         arrow.SetActive(display);
     }
+
+    public void AddCard()
+    {
+        Card card;
+        card.KingdomType = GameBoard.mapTiles[currentCellIndex].Owner;
+        card.CardType = Random.Range(1, 14);
+        Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
+        cardList.Add(card);
+    }
 }

@@ -38,7 +38,6 @@ public class Dice : MonoBehaviour
 
         finalDiceValue = Random.Range(1, 7);
         sr.sprite = diceSprites[finalDiceValue - 1];
-        Debug.Log(finalDiceValue);
 
         GameManager.isRolled = true;
         isRolling = false;

@@ -113,7 +113,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 점령 버튼 클릭 시 작동 - 지금은 도착만 해도 작동
+    // 점령 버튼 클릭 시 작동
     public void OccupyRegion()
     {
         // 싸우는 스크립트 넣는 곳
@@ -130,6 +130,15 @@ public class GameManager : MonoBehaviour
             tilePerPlayer[currentPlayer]++;
         }
 
+        SelectionPanel.SetActive(false);
+        NextTurn();
+    }
+
+    // 징집/모집 버튼 클릭 시 작동
+    // 지금은 구분 없이 랜덤으로 추가만
+    public void DraftArmy()
+    {
+        players[currentPlayer].AddCard();
         SelectionPanel.SetActive(false);
         NextTurn();
     }
