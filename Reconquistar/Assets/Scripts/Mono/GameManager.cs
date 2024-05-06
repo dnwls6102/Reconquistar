@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
+    [SerializeField] private GameObject SelectionPanel;
 
     private int playerNum = 4;
     private int currentPlayer;
@@ -94,16 +95,15 @@ public class GameManager : MonoBehaviour
 
         isMoving = false;
         isRolled = false;
-        OccupyRegion(); // 나중에 지워
 
-        NextTurn();
+        SelectionPanel.SetActive(true);
     }
 
     private void NextTurn()
     {
         players[currentPlayer].SetArrow(false);
         currentTurn++;
-        
+
         // 모두 턴 가졌으면 다음 라운드
         if (currentTurn == playerNum) SortPlayerTurnOrder();
         else
@@ -129,5 +129,8 @@ public class GameManager : MonoBehaviour
             tilePerPlayer[currentOwner]--;
             tilePerPlayer[currentPlayer]++;
         }
+
+        SelectionPanel.SetActive(false);
+        NextTurn();
     }
 }
