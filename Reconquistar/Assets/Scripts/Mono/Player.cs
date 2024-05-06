@@ -22,6 +22,11 @@ public class Player : MonoBehaviour
         transform.position = GameBoard.cellAxis[currentCellIndex];
     }
 
+    public int GetCellIndex()
+    {
+        return currentCellIndex;
+    }
+
     public IEnumerator PlayerMove(int distance, bool clockwise)
     {
         int direction = 1;

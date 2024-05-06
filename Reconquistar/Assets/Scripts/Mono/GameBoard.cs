@@ -6,6 +6,7 @@ public class GameBoard : MonoBehaviour
 {
     public static Vector3[] vertex;
     public static Vector3[] cellAxis;
+    public static MapTile[] mapTiles;
 
     private static GameBoard instance;
     public static GameBoard Instance => instance;
@@ -35,6 +36,7 @@ public class GameBoard : MonoBehaviour
     {
         tilePerLine = 11 - 1;
         cellAxis = new Vector3[tilePerLine * 4];
+        mapTiles = new MapTile[tilePerLine * 4];
 
         for (int i = 0; i < 4; i++)
         {
@@ -43,7 +45,11 @@ public class GameBoard : MonoBehaviour
             {
                 Vector3 loc = vertex[i] - distance * j;
                 cellAxis[tilePerLine * i + j] = loc;
-                Instantiate(MapTile, loc, Quaternion.identity);
+                
+                GameObject tile = Instantiate(MapTile, loc, Quaternion.identity);
+                MapTile mapTile = tile.GetComponent<MapTile>();
+                mapTiles[tilePerLine * i + j] = mapTile;
+                mapTile.ChangeOwner(i);
             }
         }
     }

@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviour
 
     private int playerNum = 4;
     private int currentPlayer;
-    public static bool isRolled;
-    public static bool isMoving;
+    public static bool isRolled; // 주사위 굴렸는지
+    public static bool isMoving; // 이동 중인지
     private Player[] players;
+    private int[] tilePerPlayer; // player 소유한 타일 수
 
     [SerializeField] private Button ClockwiseBtn;
     [SerializeField] private Button CounterClockwiseBtn;
@@ -26,15 +27,19 @@ public class GameManager : MonoBehaviour
         players[currentPlayer].SetArrow(true);
     }
 
+    // player 생성, 소유 타일 수 지정
     private void InitializePlayers()
     {
         players = new Player[playerNum];
+        tilePerPlayer = new int[playerNum];
+
         for (int i = 0; i < playerNum; i++)
         {
             GameObject playerObject = Instantiate(PlayerPrefab);
             Player player = playerObject.GetComponent<Player>();
             player.SetCellIndex(i * GameBoard.tilePerLine);
             players[i] = player;
+            tilePerPlayer[i] = GameBoard.tilePerLine;
         }
     }
 
@@ -44,22 +49,9 @@ public class GameManager : MonoBehaviour
         {
             StartCoroutine(Dice.Instance.RollDice());
         }
-
-        // else if (isRolled && !isMoving)
-        // {
-        //     if (Input.GetKeyDown(KeyCode.LeftArrow))
-        //     {
-        // isMoving = true;
-        //         StartCoroutine(PlayerTurn(false));
-        //     }
-        //     else if (Input.GetKeyDown(KeyCode.RightArrow))
-        //     {
-        //         isMoving = true;
-        //         StartCoroutine(PlayerTurn(true));
-        //     }
-        // }
     }
 
+    // 이동 버튼 클릭
     public void ArrowBtnClick(bool clockwise)
     {
         if (!isRolled || isMoving)
@@ -72,6 +64,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerTurn(clockwise));
     }
 
+    // 이동 -> 다음 플레이어 턴
     private IEnumerator PlayerTurn(bool clockwise)
     {
         yield return StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, clockwise));
