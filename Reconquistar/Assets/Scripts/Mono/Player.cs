@@ -1,6 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
+public struct Card
+{
+    public int KingdomType;
+    public int CardType;
+    // public List<Buff> BuffList;
+}
 
 public class Player : MonoBehaviour
 {
@@ -8,6 +17,7 @@ public class Player : MonoBehaviour
     private int currentCellIndex;
     private SpriteRenderer sr;
     private GameObject arrow;
+    public List<Card> cardList = new List<Card>();
 
     private void Awake()
     {
