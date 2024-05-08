@@ -74,6 +74,8 @@ namespace _1.Scripts.DOTS.System
             //이동 판정을 위한 moves array
             NativeArray<int2> moves = new(2, Allocator.Temp);
 
+            // (한 팀의 전투 병력이 절반 이하로 떨어질 경우) 사기 스탯 체크 후 도주 판단
+
             // 1번 우선순위 : 자유 이동 태그 유닛의 이동
             if (!priorityMovingTagQuery.IsEmpty) // 자유 이동 태그를 가진 유닛이 한 명이라도 있을 경우
             {
@@ -134,8 +136,13 @@ namespace _1.Scripts.DOTS.System
                         else SystemAPI.SetComponentEnabled<LazyTag>(entity, false); // 그 외의 경우 LazyTag 비활성화
                     }
                 }
-
             }
+
+            //2번 우선순위: 사격 무기의 재장전
+            //사격 무기를 갖고 있는 유닛들에 별도의 태그 및 총알 갯수를 저장하는 변수를 부여하여
+            //총알 갯수가 0개이면 재장전하는 식으로
+
+            //3번 우선순위: (치료 등 기타 특수능력의) 능력 범위 안에 목표가 있을 시 능력 사용
 
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 활성화된 엔티티가 없을 경우
             if (behaviorTagQuery.IsEmpty)
@@ -224,6 +231,10 @@ namespace _1.Scripts.DOTS.System
                 {
                     attackTag.ValueRW = false;
                 }
+
+                //6번 우선순위 : 상기한 모든 행동을 할 수 없는 경우 lazy tag를 부여
+
+                //자유 공격 태그 유닛들의 공격
             }
         }
 

@@ -126,7 +126,7 @@ namespace _1.Scripts.DOTS.System
                     }
                     else if (x == 6)
                     {
-                        x = 97;
+                        x = 99;
                     }
                     else if (x > 6)
                     {
