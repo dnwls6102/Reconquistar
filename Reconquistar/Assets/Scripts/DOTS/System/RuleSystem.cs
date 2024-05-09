@@ -19,13 +19,13 @@ namespace _1.Scripts.DOTS.System
         EntityQuery spawnerQuery;
         EntityQuery priorityMovingTagQuery;
         EntityQuery priorityAttackTagQuery;
+        EntityQuery ShootingUnitQuery;
 
         Entity spawnerEntity;
 
         ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
         ComponentLookup<StartPause> startLookup;
-        //ComponentLookup<TargetEntityData> targetEntityLookup;
-        //ComponentLookup<Flip> flipLookup;
+
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -36,14 +36,13 @@ namespace _1.Scripts.DOTS.System
             priorityMovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag>().Build(ref state);
             // 자유 공격 태그를 갖는 유닛들을 긁어 모으는 쿼리
             priorityAttackTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackTag>().Build(ref state);
+            // 원거리 유닛들을 긁어 모으는 쿼리
+            ShootingUnitQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<ShootTag>().Build(ref state);
             behaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
             sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
-            //targetEntityLookup = state.GetComponentLookup<TargetEntityData>(true);
-            //flipLookup = state.GetComponentLookup<Flip>(true);
-            //priorityMovingTagLookup = state.GetComponentLookUp<
             startLookup = state.GetComponentLookup<StartPause>(true);
         }
 
@@ -141,9 +140,15 @@ namespace _1.Scripts.DOTS.System
             //2번 우선순위: 사격 무기의 재장전
             //사격 무기를 갖고 있는 유닛들에 별도의 태그 및 총알 갯수를 저장하는 변수를 부여하여
             //총알 갯수가 0개이면 재장전하는 식으로
+            //System에서 한번에 처리하지 말고 Job으로 할당
+            if (!ShootingUnitQuery.IsEmpty)
+            {
+                ReloadJob reloadJob = new();
+                reloadJob.ScheduleParallel();
+            }
 
             //3번 우선순위: (치료 등 기타 특수능력의) 능력 범위 안에 목표가 있을 시 능력 사용
-
+            Debug.Log("Step 3");
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 활성화된 엔티티가 없을 경우
             if (behaviorTagQuery.IsEmpty)
             {
@@ -164,6 +169,7 @@ namespace _1.Scripts.DOTS.System
                 sampleUnits.Dispose();
 
                 //체력 감소 == 전투 (일반행동 우선순위 4)
+                Debug.Log("Step 4");
                 foreach (var (unit, target) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>>().WithAll<AttackTag>())
                 {
                     SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
@@ -173,15 +179,18 @@ namespace _1.Scripts.DOTS.System
                 EntityCommandBuffer ecb = new(Allocator.Temp);
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
+
                     if (unit.ValueRW.hp <= 0)
                     {
                         SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
                         ecb.DestroyEntity(entity);
+                        Debug.Log("Delete");
                     }
                 }
                 ecb.Playback(state.EntityManager);
 
                 //Attack을 하지 않은 유닛들이 순차적으로 이동(일반행동 우선순위 5)
+                Debug.Log("Step 5");
                 for (int i = 0; i < 2; i++)
                 {
                     //AttackTag가 비활성화되고 MovingTag가 비활성화된 유닛들
@@ -233,6 +242,7 @@ namespace _1.Scripts.DOTS.System
                 }
 
                 //6번 우선순위 : 상기한 모든 행동을 할 수 없는 경우 lazy tag를 부여
+
 
                 //자유 공격 태그 유닛들의 공격
             }

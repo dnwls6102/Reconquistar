@@ -215,6 +215,7 @@ MonoBehaviour:
   SpriteTilePrefab: {fileID: 2833387626386893320, guid: 17a31b9fe7e9daf4ba6664b2432017b9, type: 3}
   number: 100
   width: 0.6
+  _isDebug: 1
 --- !u!1 &2086172758
 GameObject:
   m_ObjectHideFlags: 0
@@ -246,10 +247,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sampleUnit: {fileID: 8475687399866159820, guid: d1e8228476a88ce40a58efc1ffbb5771, type: 3}
   samplePMoveUnit: {fileID: 8475687399866159820, guid: 15759b19641db334e86622331218efef, type: 3}
+  SampleShootingUnit: {fileID: 8475687399866159820, guid: 297dd67368e953e47809ff5300f0bd92, type: 3}
   number: 1400
   pMoveNum: 200
+  ShootingUnitNum: 0
   ToggleValue: 0
   startFlag: 0
+  _debugSampleUnit: 0
+  _debugPMoveUnit: 0
+  _debugShootingUnit: 1
 --- !u!4 &2086172760
 Transform:
   m_ObjectHideFlags: 0
