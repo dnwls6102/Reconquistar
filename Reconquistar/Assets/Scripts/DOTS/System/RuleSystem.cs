@@ -13,7 +13,7 @@ namespace _1.Scripts.DOTS.System
 {
     public partial struct RuleSystem : ISystem
     {
-        EntityQuery behaviorTagQuery;
+        EntityQuery NormalBehaviorTagQuery;
         EntityQuery unitQuery;
         EntityQuery tileQuery;
         EntityQuery spawnerQuery;
@@ -38,7 +38,7 @@ namespace _1.Scripts.DOTS.System
             priorityAttackTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackTag>().Build(ref state);
             // 원거리 유닛들을 긁어 모으는 쿼리
             ShootingUnitQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<ShootTag>().Build(ref state);
-            behaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
+            NormalBehaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<AttackTag, MovingTag, LazyTag>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
@@ -124,13 +124,13 @@ namespace _1.Scripts.DOTS.System
                                     unit.ValueRW.destIndex = nextTile.ValueRO.index; // 이 유닛의 destIndex를 nextTile의 Index로 설정
                                     currentTile.ValueRW.soldier = 0; // 현재 점거중인 타일의 soldier값을 0으로 설정하여 뒤에 있는 유닛이 자유롭게 이동하게끔 설정
                                     nextTile.ValueRW.soldier = 1; // 이동하려는 다음 맵 타일의 soldier값을 1로 설정
-                                    SystemAPI.SetComponentEnabled<MovingTag>(entity, true); // MovingTag를 붙여 MovementJob이 일어나게끔 함
+                                    SystemAPI.SetComponentEnabled<PriorityMovingTag>(entity, true); // MovingTag를 붙여 MovementJob이 일어나게끔 함
                                     break;
                                 }
                             }
                         }
 
-                        if (i == 0 && !SystemAPI.IsComponentEnabled<MovingTag>(entity)) // 첫 번째 루프를 도는 중 MovingTag가 붙여지지 않은 entity의 경우 LazyTag 붙이기
+                        if (i == 0 && !SystemAPI.IsComponentEnabled<PriorityMovingTag>(entity)) // 첫 번째 루프를 도는 중 MovingTag가 붙여지지 않은 entity의 경우 LazyTag 붙이기
                             SystemAPI.SetComponentEnabled<LazyTag>(entity, true);
                         else SystemAPI.SetComponentEnabled<LazyTag>(entity, false); // 그 외의 경우 LazyTag 비활성화
                     }
@@ -150,7 +150,7 @@ namespace _1.Scripts.DOTS.System
             //3번 우선순위: (치료 등 기타 특수능력의) 능력 범위 안에 목표가 있을 시 능력 사용
             Debug.Log("Step 3");
             //Attack Tag, Moving Tag, Lazy Tag 중 하나라도 활성화된 엔티티가 없을 경우
-            if (behaviorTagQuery.IsEmpty)
+            if (NormalBehaviorTagQuery.IsEmpty)
             {
                 //Debug.Log("Find behavior");
 

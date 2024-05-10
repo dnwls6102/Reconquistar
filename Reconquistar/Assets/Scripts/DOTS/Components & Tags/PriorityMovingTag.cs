@@ -2,7 +2,7 @@ using Unity.Entities;
 
 namespace _1.Scripts.DOTS.Components___Tags
 {
-    public struct PriorityMovingTag : IComponentData
+    public struct PriorityMovingTag : IComponentData,IEnableableComponent
     {
         //주 : 이동 처리는 MovingTag 재탕
     }
