@@ -6,7 +6,7 @@ namespace _1.Scrpits.DOTS.Authoring_baker_
 {
     public class BulletAuthoring : MonoBehaviour
     {
-        public int vel;
+        public float vel = 1.1f;
         private class BulletAuthoringBaker : Baker<BulletAuthoring>
         {
             public override void Bake(BulletAuthoring authoring)
@@ -22,6 +22,6 @@ namespace _1.Scrpits.DOTS.Authoring_baker_
 
     public struct Bullet : IComponentData
     {
-        public int velocity;
+        public float velocity;
     }
 }

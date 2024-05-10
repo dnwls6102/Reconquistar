@@ -56,8 +56,8 @@ MonoBehaviour:
       x: 0.5
       y: 0.5
     Size:
-      x: 1
-      y: 1
+      x: 0.1
+      y: 0.1
     LockSize: 0
     DrawMode: 0
     TilingAndOffset:
@@ -71,7 +71,7 @@ MonoBehaviour:
   Sorting:
     StaticSorting: 0
     SortingIndex: 0
-    SortingLayer: 0
+    SortingLayer: 156430415
 --- !u!114 &666592138580004300
 MonoBehaviour:
   m_ObjectHideFlags: 0

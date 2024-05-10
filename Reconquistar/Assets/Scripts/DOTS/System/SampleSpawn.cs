@@ -73,7 +73,7 @@ namespace _1.Scripts.DOTS.System
                         index = new int2(x, y),
                         hp = 3,
                         movementspeed = 1f,
-                        dmg = 1,
+                        dmg = 0,
                         team = newteam
                     });
                     ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
@@ -105,7 +105,6 @@ namespace _1.Scripts.DOTS.System
                 //SampleShootingUnit 생성
                 foreach (var SampleSUnit in SampleShootingUnits)
                 {
-                    Debug.Log("ㅇㅇㅇ");
                     ecb.SetComponentForLinkedEntityGroup(SampleSUnit, shootingQueryMask, new SampleUnitComponentData
                     {
                         index = new int2(x, y),

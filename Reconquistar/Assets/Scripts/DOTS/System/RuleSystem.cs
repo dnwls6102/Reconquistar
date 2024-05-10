@@ -169,14 +169,42 @@ namespace _1.Scripts.DOTS.System
                 sampleUnits.Dispose();
 
                 //체력 감소 == 전투 (일반행동 우선순위 4)
+                //현재 유닛 별 사거리가 구현되지 않음
+                //사거리별로 유닛들 공격하는 매커니즘 구현해야
+                //원거리 유닛의 사격 및 총알이 날아가는 것부터 보여주기
                 Debug.Log("Step 4");
+                EntityCommandBuffer ecb = new(Allocator.Temp);
+                //원거리 유닛 위치에서 총알을 생성하고
+                //총알의 velocity를 받아서 target 위치까지 이동시키기
+                //target위치와 일정 수준 이상으로 가까워지면 총알 삭제
+                //target의 체력까지 깎아버리기?
+                //ShootingJob 할당 => Job에서 LocalTransform을 가져오지 못하는 문제. LocalTransform은 컴포넌트로서 Querying이 불가능하고 entity로 받아와 얻어야하는듯
+                // ShootingJob shootingJob = new()
+                // {
+                //     ECB = ecb,
+                //     //SampleUnitComponents = sampleUnitLookup,
+                // };
+                // shootingJob.Schedule();
+                //ShootTag 컴포넌트와 LocalTransform 컴포넌트, 그리고 두 컴포넌트를 갖고 있는 엔티티를 Querying(공격 태그가 활성화된 유닛들만)
+                foreach (var (bullet, transform, unitEntity) in SystemAPI.Query<RefRO<ShootTag>, RefRW<LocalTransform>>().WithAll<AttackTag>().WithEntityAccess())
+                {
+                    var temp = state.EntityManager.Instantiate(bullet.ValueRO.BulletEntity); //query로 받아온 ShootTag 컴포넌트의 bulletEntity 생성
+                    state.EntityManager.SetComponentData(temp, new LocalTransform()
+                    {
+                        Position = SystemAPI.GetComponent<LocalTransform>(unitEntity).Position,
+                        Rotation = quaternion.identity,
+                        Scale = SystemAPI.GetComponent<LocalTransform>(unitEntity).Scale,
+                    }); //총알 엔티티의 transform을 원거리 유닛의 transform으로 설정
+
+                }
+
                 foreach (var (unit, target) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>>().WithAll<AttackTag>())
                 {
                     SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
                 }
 
                 //체력 0인 유닛 파괴
-                EntityCommandBuffer ecb = new(Allocator.Temp);
+
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
 

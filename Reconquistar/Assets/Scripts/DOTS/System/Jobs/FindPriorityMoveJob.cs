@@ -31,7 +31,6 @@ namespace _1.Scripts.DOTS.System.Jobs
             //가장 가까운 적 유닛 찾기
             for (int i = 0; i < SampleUnits.Length; i++)
             {
-
                 if (SampleUnitComponents[SampleUnits[i]].team != currentUnit.team) //전체 유닛들 중 i번째 인덱스를 가진 유닛의 팀과 현재 자유이동 유닛의 팀이 다를경우
                 {
                     float newDist = math.distancesq(currentUnit.index, SampleUnitComponents[SampleUnits[i]].index); //해당 유닛과 현재 자유이동 유닛의 거리 측정
@@ -43,17 +42,18 @@ namespace _1.Scripts.DOTS.System.Jobs
                         target.targetEntity = SampleUnits[i];
                         found = true; //flag 설정
                     }
-                    if (found) //가까운 적, 그러니까 목표 대상을 찾았다면
-                    {
-                        if (targetIndex.x - currentUnit.index.x > 0) //targetIndex가 현재 유닛보다 오른쪽에 있는 경우
-                        {
-                            flipx.Value = new int2(-1, 0); // flipx 발동 
-                        }
-                        else if (targetIndex.x - currentUnit.index.x < 0) //targetIndex가 현재 유닛보다 왼쪽에 있는 경우
-                        {
-                            flipx.Value = new int2(1, 0); // flipx 취소
-                        }
-                    }
+
+                }
+            }
+            if (found) //가까운 적, 그러니까 목표 대상을 찾았다면
+            {
+                if (targetIndex.x - currentUnit.index.x > 0) //targetIndex가 현재 유닛보다 오른쪽에 있는 경우
+                {
+                    flipx.Value = new int2(-1, 0); // flipx 발동 
+                }
+                else if (targetIndex.x - currentUnit.index.x < 0) //targetIndex가 현재 유닛보다 왼쪽에 있는 경우
+                {
+                    flipx.Value = new int2(1, 0); // flipx 취소
                 }
             }
 

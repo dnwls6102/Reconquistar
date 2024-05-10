@@ -215,7 +215,6 @@ MonoBehaviour:
   SpriteTilePrefab: {fileID: 2833387626386893320, guid: 17a31b9fe7e9daf4ba6664b2432017b9, type: 3}
   number: 100
   width: 0.6
-  _isDebug: 1
 --- !u!1 &2086172758
 GameObject:
   m_ObjectHideFlags: 0
