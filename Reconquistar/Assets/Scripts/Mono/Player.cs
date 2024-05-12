@@ -1,6 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
+
+public struct Card
+{
+    public int KingdomType;
+    public int CardType;
+    // public List<Buff> BuffList;
+}
 
 public class Player : MonoBehaviour
 {
@@ -8,6 +17,7 @@ public class Player : MonoBehaviour
     private int currentCellIndex;
     private SpriteRenderer sr;
     private GameObject arrow;
+    public List<Card> cardList = new List<Card>();
 
     private void Awake()
     {
@@ -20,6 +30,11 @@ public class Player : MonoBehaviour
     {
         currentCellIndex = index;
         transform.position = GameBoard.cellAxis[currentCellIndex];
+    }
+
+    public int GetCellIndex()
+    {
+        return currentCellIndex;
     }
 
     public IEnumerator PlayerMove(int distance, bool clockwise)
@@ -58,5 +73,14 @@ public class Player : MonoBehaviour
     public void SetArrow(bool display)
     {
         arrow.SetActive(display);
+    }
+
+    public void AddCard()
+    {
+        Card card;
+        card.KingdomType = GameBoard.mapTiles[currentCellIndex].Owner;
+        card.CardType = Random.Range(1, 14);
+        Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
+        cardList.Add(card);
     }
 }
