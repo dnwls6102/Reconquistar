@@ -45,11 +45,11 @@ namespace _1.Scripts.DOTS.System.Jobs
             {
                 if (targetIndex.x - currentUnit.index.x > 0) //targetIndex가 현재 유닛보다 오른쪽에 있는 경우
                 {
-                    flipx.Value = new int2(-1, 0); // flipx 발동
+                    flipx.Value = new int2(1, 0); // flipx 발동
                 }
                 else if (targetIndex.x - currentUnit.index.x < 0) //targetIndex가 현재 유닛보다 왼쪽에 있는 경우
                 {
-                    flipx.Value = new int2(1, 0); // flipx 취소
+                    flipx.Value = new int2(-1, 0); // flipx 취소
                 }
                 //찾은 타겟이 범위 안에 있을 시 Attack Tag 활성화
                 if (math.abs(currentUnit.index.x - targetIndex.x) + math.abs(currentUnit.index.y - targetIndex.y) <= 1)

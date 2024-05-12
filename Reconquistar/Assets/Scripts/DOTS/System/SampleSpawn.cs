@@ -15,6 +15,7 @@ namespace _1.Scripts.DOTS.System
         public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<SampleSpawnData>();
+            state.RequireForUpdate<SamplePMoveSpawnData>();
             state.RequireForUpdate<MapTileAuthoringComponentData>();
             state.RequireForUpdate<MapMakerComponentData>();
         }

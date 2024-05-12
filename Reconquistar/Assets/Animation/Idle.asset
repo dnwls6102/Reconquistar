@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3dc460e3eaeb97f48b48aa09fa988f09, type: 3}
-  m_Name: SampleMoveAnimation
+  m_Name: Idle
   m_EditorClassIdentifier: 
   SpriteSheet: {fileID: 21300000, guid: bbeabe4a93f35ec44807fc274b0aae22, type: 3}
   FrameCount:
@@ -18,38 +18,6 @@ MonoBehaviour:
     y: 1
   FrameRange:
     Offset: 0
-    Count: 0
+    Count: 1
   FrameDurations:
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
-  - 0.05
+  - 1
