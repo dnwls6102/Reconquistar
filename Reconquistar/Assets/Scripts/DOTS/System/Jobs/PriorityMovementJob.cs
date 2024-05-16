@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Authoring_baker_;
 using Unity.Collections;
+using UnityEngine;
 
 //using UnityEngine;
 //using System.Diagnostics;
@@ -21,9 +22,11 @@ namespace _1.Scripts.DOTS.System.Jobs
         // excute 쿼리에 moving tag 추가 예정
         public void Execute(ref LocalTransform transform, EnabledRefRW<PriorityMovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
+            //Debug.Log("PMove");
             // MovingTag를 달고 있는 Unit의 transform이 Unit의 목표지점(destIndex)와 같을 경우?
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
+                //Debug.Log("PMoveCancel:"+transform.Position);
                 // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false; //Unit의 index 정보를 destIndex로 바꾸고 movingTag 없애기

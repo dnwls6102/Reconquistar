@@ -213,6 +213,7 @@ namespace _1.Scripts.DOTS.System
                         dmg = 0,
                         team = newteam
                     });
+                    ecb.SetComponentEnabled<PriorityMovingTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<MovingTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(PMoveUnit, false);
