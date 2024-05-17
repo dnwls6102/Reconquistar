@@ -37,13 +37,13 @@ namespace _1.Scripts.DOTS.System
             if (!PriorityMovingTagQuery.IsEmpty && MovingTagQuery.IsEmpty)
             {
                 //Debug.Log("Moving");
-                new PriorityMovementJob()
-                {
-                    Time = (float)SystemAPI.Time.DeltaTime,
-                    MapMaker = mapMaker
-                    //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
-                }.ScheduleParallel();
-                state.Dependency.Complete();
+                // new PriorityMovementJob()
+                // {
+                //     Time = (float)SystemAPI.Time.DeltaTime,
+                //     MapMaker = mapMaker
+                //     //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+                // }.ScheduleParallel();
+                // state.Dependency.Complete();
             }
             if (!MovingTagQuery.IsEmpty)
             {
@@ -56,7 +56,7 @@ namespace _1.Scripts.DOTS.System
                 }.ScheduleParallel();
                 state.Dependency.Complete();
             }
-            
+
 
         }
 
