@@ -34,18 +34,18 @@ namespace _1.Scripts.DOTS.System
             {
                 return;
             }
-            if (!PriorityMovingTagQuery.IsEmpty && MovingTagQuery.IsEmpty)
-            {
-                //Debug.Log("Moving");
-                // new PriorityMovementJob()
-                // {
-                //     Time = (float)SystemAPI.Time.DeltaTime,
-                //     MapMaker = mapMaker
-                //     //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
-                // }.ScheduleParallel();
-                // state.Dependency.Complete();
-            }
-            if (!MovingTagQuery.IsEmpty)
+            // if (!PriorityMovingTagQuery.IsEmpty && MovingTagQuery.IsEmpty)
+            // {
+            //     //Debug.Log("Moving");
+            //     // new PriorityMovementJob()
+            //     // {
+            //     //     Time = (float)SystemAPI.Time.DeltaTime,
+            //     //     MapMaker = mapMaker
+            //     //     //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            //     // }.ScheduleParallel();
+            //     // state.Dependency.Complete();
+            // }
+            if (!MovingTagQuery.IsEmpty && PriorityMovingTagQuery.IsEmpty)
             {
                 //Debug.Log("Moving");
                 new MovementJob

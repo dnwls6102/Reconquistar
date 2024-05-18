@@ -155,6 +155,7 @@ namespace _1.Scripts.DOTS.System
             {
                 ReloadJob reloadJob = new();
                 reloadJob.ScheduleParallel();
+                state.Dependency.Complete();
             }
 
             //3번 우선순위: (치료 등 기타 특수능력의) 능력 범위 안에 목표가 있을 시 능력 사용
