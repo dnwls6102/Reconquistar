@@ -80,6 +80,7 @@ namespace _1.Scripts.DOTS.System
                     ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(SampleUnit, false);
+                    ecb.SetComponentEnabled<NormalActionDoneTag>(SampleUnit, false);
 
                     ecb.SetComponent(SampleUnit, new LocalTransform()
                     {
@@ -117,6 +118,7 @@ namespace _1.Scripts.DOTS.System
                     ecb.SetComponentEnabled<MovingTag>(SampleSUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleSUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(SampleSUnit, false);
+                    ecb.SetComponentEnabled<NormalActionDoneTag>(SampleSUnit, false);
 
                     ecb.SetComponent(SampleSUnit, new LocalTransform()
                     {
@@ -159,6 +161,8 @@ namespace _1.Scripts.DOTS.System
                     ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(SampleUnit, false);
+                    ecb.SetComponentEnabled<NormalActionDoneTag>(SampleUnit, false);
+                    
 
                     ecb.SetComponent(SampleUnit, new LocalTransform()
                     {
@@ -217,6 +221,8 @@ namespace _1.Scripts.DOTS.System
                     ecb.SetComponentEnabled<MovingTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(PMoveUnit, false);
+                    ecb.SetComponentEnabled<PriorityMoveDoneTag>(PMoveUnit, false);
+                    ecb.SetComponentEnabled<NormalActionDoneTag>(PMoveUnit, false);
 
                     ecb.SetComponent(PMoveUnit, new LocalTransform()
                     {

@@ -26,6 +26,8 @@ public class SamplePMoveUnitAuthoring : MonoBehaviour
             AddComponent(entity, new AttackTag());
             AddComponent(entity, new LazyTag());
             AddComponent(entity, new TargetEntityData());
+            AddComponent(entity, new PriorityMoveDoneTag());
+            AddComponent(entity, new NormalActionDoneTag());
         }
     }
 }
