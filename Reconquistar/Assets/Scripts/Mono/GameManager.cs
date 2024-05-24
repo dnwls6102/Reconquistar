@@ -120,7 +120,7 @@ public class GameManager : MonoBehaviour
 
         bool win = true;
         int currentCellIndex = players[currentPlayer].GetCellIndex();
-        MapTile currentMapTile = GameBoard.mapTiles[currentCellIndex];
+        MapTile currentMapTile = GameBoard.tileInfos[currentCellIndex].GetMapTile();
         if (win)
         {
             int currentOwner = currentMapTile.Owner;

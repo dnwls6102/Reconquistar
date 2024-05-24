@@ -14,7 +14,7 @@ public struct Card
 public class Player : MonoBehaviour
 {
     private int boardLength;
-    private int currentCellIndex;
+    private GameBoard.TileInfo currentTileInfo;
     private SpriteRenderer sr;
     private GameObject arrow;
     public List<Card> cardList = new List<Card>();
@@ -22,33 +22,32 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        boardLength = GameBoard.cellAxis.Length;
+        boardLength = GameBoard.tileInfos.Length;
         arrow = transform.GetChild(0).gameObject;
     }
 
     public void SetCellIndex(int index)
     {
-        currentCellIndex = index;
-        transform.position = GameBoard.cellAxis[currentCellIndex];
+        currentTileInfo = GameBoard.tileInfos[index];
+        transform.position = currentTileInfo.GetCellAxis();
     }
 
     public int GetCellIndex()
     {
-        return currentCellIndex;
+        return currentTileInfo.GetIndex();
     }
 
     public IEnumerator PlayerMove(int distance, bool clockwise)
     {
-        int direction = 1;
-        if (!clockwise) direction = -1;
-
         for (int i = 0; i < distance; i++)
         {
-            currentCellIndex = (currentCellIndex + boardLength + direction) % boardLength;
-            yield return StartCoroutine(MoveToNextTile(GameBoard.cellAxis[currentCellIndex]));
+            if (clockwise) currentTileInfo = currentTileInfo.leftTileInfo;
+            else currentTileInfo = currentTileInfo.rightTileInfo;
+
+            yield return StartCoroutine(MoveToNextTile(currentTileInfo.GetCellAxis()));
         }
 
-        transform.position = GameBoard.cellAxis[currentCellIndex];
+        transform.position = currentTileInfo.GetCellAxis();
     }
 
     private IEnumerator MoveToNextTile(Vector3 end)
@@ -78,7 +77,7 @@ public class Player : MonoBehaviour
     public void AddCard()
     {
         Card card;
-        card.KingdomType = GameBoard.mapTiles[currentCellIndex].Owner;
+        card.KingdomType = currentTileInfo.GetMapTile().Owner;
         card.CardType = Random.Range(1, 14);
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
