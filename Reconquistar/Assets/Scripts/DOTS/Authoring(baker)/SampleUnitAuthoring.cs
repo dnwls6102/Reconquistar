@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 public class SampleUnitAuthoring : MonoBehaviour
 {
