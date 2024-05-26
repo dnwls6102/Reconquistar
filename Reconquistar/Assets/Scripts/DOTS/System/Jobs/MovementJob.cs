@@ -13,13 +13,14 @@ using Unity.Collections;
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct MovementJob : IJobEntity
     {
         public float Time;
         [ReadOnly] public MapMakerComponentData MapMaker;
         //public EntityCommandBuffer.ParallelWriter ECBWriter;
         // excute 쿼리에 moving tag 추가 예정
-        public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
+        public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, EnabledRefRW<NormalActionDoneTag> normalActionDoneTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
             // MovingTag를 달고 있는 Unit의 transform이 Unit의 목표지점(destIndex)와 같을 경우?
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)))
@@ -27,6 +28,7 @@ namespace _1.Scripts.DOTS.System.Jobs
                 // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false; //Unit의 index 정보를 destIndex로 바꾸고 movingTag 없애기
+                normalActionDoneTag.ValueRW = true;
             }
             else // 아직 일치하지 않을 경우
             {

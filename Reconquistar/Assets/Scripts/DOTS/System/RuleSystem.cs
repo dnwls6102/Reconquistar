@@ -94,17 +94,10 @@ namespace _1.Scripts.DOTS.System
                         Debug.Log("Delete");
                         continue;
                     }
-
-                    if (pMoveReset.HasComponent(entity))
-                    {
-                        pMoveReset.SetComponentEnabled(entity,false);
-                    }
-                    MoveReset.SetComponentEnabled(entity,false);
-                    if (pAtkReset.HasComponent(entity))
-                    {
-                        pAtkReset.SetComponentEnabled(entity,false);
-                    }
                 }
+                MoveReset.SetComponentEnabled(state.SystemHandle,false);
+                pAtkReset.SetComponentEnabled(state.SystemHandle,false);
+                pMoveReset.SetComponentEnabled(state.SystemHandle,false);
                 ecb.Playback(state.EntityManager);
                 tiles.Dispose();
                 
