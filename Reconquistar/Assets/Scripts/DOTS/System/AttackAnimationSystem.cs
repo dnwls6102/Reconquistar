@@ -39,7 +39,7 @@ namespace _1.Scripts.DOTS.System
                 return;
             var time = SystemAPI.Time.ElapsedTime;
 
-            var animationSwitchJob = new AnimationJob
+            var animationSwitchJob = new AttackAnimationJob()
             {
                 AnimationSettings = animationSettings,
                 Time = time

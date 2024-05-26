@@ -15,4 +15,5 @@ namespace _1.Scripts.DOTS.System.Jobs
             animator.SetAnimation(attackTagEnabled.ValueRO ? AnimationSettings.AttackHash : AnimationSettings.IdleHash, Time);
         } 
     }
+    
 }
