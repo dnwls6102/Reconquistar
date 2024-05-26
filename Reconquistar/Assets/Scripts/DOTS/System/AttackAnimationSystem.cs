@@ -56,7 +56,12 @@ namespace _1.Scripts.DOTS.System
             if (delay > 1)
             {
                 delay = 0;
-                
+                var animationDonJob = new AttackDoneJob()
+                {
+                    AnimationSettings = animationSettings,
+                    Time = time
+                };
+                state.Dependency = animationDonJob.ScheduleParallelByRef(systemData.AttackQuery, state.Dependency);
             }
         }
         

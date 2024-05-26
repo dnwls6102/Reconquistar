@@ -10,9 +10,12 @@ namespace _1.Scripts.DOTS.System.Jobs
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct AttackDoneJob : IJobEntity
     {
-        public void Execute(EnabledRefRW<AttackTag> attackTagEnabled,
+        public AnimationSettings AnimationSettings;
+        public double Time;
+        public void Execute(AnimatorAspect animator, EnabledRefRW<AttackTag> attackTagEnabled,
             EnabledRefRW<NormalActionDoneTag> normalActionDonTag)
         {
+            animator.SetAnimation(AnimationSettings.IdleHash, Time);
             attackTagEnabled.ValueRW = false;
             normalActionDonTag.ValueRW = true;
         }

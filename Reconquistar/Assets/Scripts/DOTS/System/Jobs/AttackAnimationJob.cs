@@ -13,7 +13,7 @@ namespace _1.Scripts.DOTS.System.Jobs
         public double Time;
         public void Execute(AnimatorAspect animator, EnabledRefRW<AttackTag> attackTagEnabled)
         {
-            animator.SetAnimation(attackTagEnabled.ValueRO ? AnimationSettings.AttackHash : AnimationSettings.IdleHash, Time);
+            animator.SetAnimation(AnimationSettings.AttackHash, Time);
         } 
     }
     
