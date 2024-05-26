@@ -1,4 +1,5 @@
-﻿using _1.Scripts.DOTS.Authoring_baker_;
+﻿using System;
+using _1.Scripts.DOTS.Authoring_baker_;
 using _1.Scripts.DOTS.Components___Tags;
 using Unity.Burst;
 using Unity.Collections;
@@ -6,6 +7,7 @@ using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
+using Random = Unity.Mathematics.Random;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -253,7 +255,10 @@ namespace _1.Scripts.DOTS.System
                 tileQuery.CopyFromComponentDataArray(tiles);
             }
 
-
+            foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
+            {
+                unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index + (uint)(DateTime.Now.ToBinary()));
+            }
         }
         [BurstCompile]
         public void OnDestroy(ref SystemState state)

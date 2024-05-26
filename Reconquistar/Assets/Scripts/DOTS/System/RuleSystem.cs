@@ -25,7 +25,7 @@ namespace _1.Scripts.DOTS.System
         Entity spawnerEntity;
         ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
         ComponentLookup<StartPause> startLookup;
-        Random seed;
+        //Random seed;
          ComponentLookup<PriorityMoveDoneTag> pMoveReset;
          ComponentLookup<NormalActionDoneTag> MoveReset;
         ComponentLookup<PriorityAttackDoneTag> pAtkReset;
@@ -55,7 +55,7 @@ namespace _1.Scripts.DOTS.System
             var dt = SystemAPI.Time.DeltaTime;
             sampleUnitLookup.Update(ref state);
             startLookup.Update(ref state);
-            seed = new Random((uint)(SystemAPI.Time.DeltaTime*1000));
+           // seed = new Random((uint)(SystemAPI.Time.DeltaTime*1000));
             //spawnerEntity = state.EntityManager.CreateEntityQuery(new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>()).GetSingletonEntity();
 
             // Debug.Log(spawnerQuery.CalculateEntityCount());
@@ -70,8 +70,11 @@ namespace _1.Scripts.DOTS.System
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
 
             NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
-            //목표 설정을 위해 모든 유닛들을 긁어온 Entity 배열
-
+            //난수 생성 확인기
+            // foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
+            // {
+            //     Debug.Log(unit.ValueRW.dice.NextInt(1, 6));
+            // }
 
             if (priorityMoveDoneQuery.IsEmpty && normalActionDoneQuery.IsEmpty && priorityAttackDoneQuery.IsEmpty) //턴 종료 확인
             {
@@ -84,7 +87,7 @@ namespace _1.Scripts.DOTS.System
                 pAtkReset = SystemAPI.GetComponentLookup<PriorityAttackDoneTag>();
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
-                    if (unit.ValueRW.order+seed.NextInt(1,6)+seed.NextInt(1,6)< 10)
+                    if (unit.ValueRW.order+unit.ValueRW.dice.NextInt(1,6)+unit.ValueRW.dice.NextInt(1,6)< 10)
                     {
                         SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
                         ecb.DestroyEntity(entity);
