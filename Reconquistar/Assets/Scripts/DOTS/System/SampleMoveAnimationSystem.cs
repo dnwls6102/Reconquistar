@@ -14,6 +14,7 @@ namespace _1.Scripts.DOTS.System
         private struct SystemData : IComponentData
         {
             public EntityQuery MovableQuery;
+            //public EntityQuery PMovableQuery;
         }
         [BurstCompile]
         public void OnCreate(ref SystemState state)

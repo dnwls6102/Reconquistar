@@ -70,12 +70,12 @@ MonoBehaviour:
   RenderSettings:
     Pivot:
       x: 0.5
-      y: 0.5
+      y: 0
     Size:
       x: 1
       y: 1
     LockSize: 0
-    DrawMode: 1
+    DrawMode: 0
     TilingAndOffset:
       x: 1
       y: 1

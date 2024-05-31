@@ -10,6 +10,7 @@ namespace _1.Scripts.DOTS.System
     public partial struct SampleUnitMoveSystem : ISystem
     {
         EntityQuery MovingTagQuery;
+        EntityQuery PriorityMovingTagQuery;
         EntityQuery unitQuery;
         EntityQuery spawnerQuery;
 
@@ -19,6 +20,7 @@ namespace _1.Scripts.DOTS.System
             //
             state.RequireForUpdate<MapMakerComponentData>();
             MovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
+            PriorityMovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag>().Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
         }
 
@@ -32,8 +34,18 @@ namespace _1.Scripts.DOTS.System
             {
                 return;
             }
-
-            if (!MovingTagQuery.IsEmpty)
+            // if (!PriorityMovingTagQuery.IsEmpty && MovingTagQuery.IsEmpty)
+            // {
+            //     //Debug.Log("Moving");
+            //     // new PriorityMovementJob()
+            //     // {
+            //     //     Time = (float)SystemAPI.Time.DeltaTime,
+            //     //     MapMaker = mapMaker
+            //     //     //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            //     // }.ScheduleParallel();
+            //     // state.Dependency.Complete();
+            // }
+            if (!MovingTagQuery.IsEmpty && PriorityMovingTagQuery.IsEmpty)
             {
                 //Debug.Log("Moving");
                 new MovementJob
@@ -44,6 +56,7 @@ namespace _1.Scripts.DOTS.System
                 }.ScheduleParallel();
                 state.Dependency.Complete();
             }
+
 
         }
 

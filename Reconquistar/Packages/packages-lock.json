@@ -7,7 +7,7 @@
       "dependencies": {
         "com.unity.entities": "1.0.0-pre.65"
       },
-      "hash": "abf1821104a6fa7bb8e4ee6458da6fbae2743969"
+      "hash": "184502dcc42c2fc6a8bd7d26b35aa62e26c6315a"
     },
     "com.tonymax.nsprites.foundation": {
       "version": "https://github.com/Antoshidza/NSprites-Foundation.git",
@@ -16,7 +16,7 @@
       "dependencies": {
         "com.unity.entities": "1.0.0-pre.65"
       },
-      "hash": "e3bdaed1e3b3b7914b8c9fad9a2a291508a28078"
+      "hash": "01f1a54b53fdd2220eb2601d1307c3bbcb0d495f"
     },
     "com.unity.2d.animation": {
       "version": "9.0.4",
@@ -140,6 +140,13 @@
       },
       "url": "https://packages.unity.com"
     },
+    "com.unity.editorcoroutines": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
     "com.unity.entities": {
       "version": "1.0.16",
       "depth": 0,
@@ -222,6 +229,15 @@
       "depth": 1,
       "source": "registry",
       "dependencies": {},
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.memoryprofiler": {
+      "version": "1.1.0",
+      "depth": 0,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.editorcoroutines": "1.0.0"
+      },
       "url": "https://packages.unity.com"
     },
     "com.unity.nuget.mono-cecil": {
