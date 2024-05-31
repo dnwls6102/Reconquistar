@@ -12,18 +12,31 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject SelectionPanel;
 
     private int playerNum = 4;
-    private int currentPlayer;
+    public int currentPlayer;
     private int currentTurn;
-
+    public layoutgroupcontroller layoutgroupcontroller;
     public static bool isRolled; // 주사위 굴렸는지
     public static bool isMoving; // 이동 중인지
-
-    private Player[] players;
+    
+    public Player[] players;
     private Dictionary<int, int> tilePerPlayer; // player 소유한 타일 수
     private List<int> playerTurnOrder = new List<int>();
 
     [SerializeField] private Button ClockwiseBtn;
     [SerializeField] private Button CounterClockwiseBtn;
+
+    public static GameManager Instance;
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            DontDestroyOnLoad(gameObject);
+            Instance = this;
+        }else if (Instance != this)
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {

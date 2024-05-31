@@ -18,12 +18,17 @@ public class Player : MonoBehaviour
     private SpriteRenderer sr;
     private GameObject arrow;
     public List<Card> cardList = new List<Card>();
-
+    public layoutgroupcontroller deckcontroller;
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         boardLength = GameBoard.tileInfos.Length;
         arrow = transform.GetChild(0).gameObject;
+    }
+
+    private void Start()
+    {
+        deckcontroller = layoutgroupcontroller.Instance;
     }
 
     public void SetCellIndex(int index)
@@ -81,5 +86,6 @@ public class Player : MonoBehaviour
         card.CardType = Random.Range(1, 14);
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
+        deckcontroller.RefreshLayoutGroup(cardList);
     }
 }

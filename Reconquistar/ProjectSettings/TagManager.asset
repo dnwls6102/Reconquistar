@@ -41,12 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: background
-    uniqueID: 256953075
+  - name: Background
+    uniqueID: 3805113319
+    locked: 0
+  - name: Ui
+    uniqueID: 3984777031
     locked: 0
   - name: Unit
     uniqueID: 1882393901
-    locked: 0
-  - name: Bullet,Objects
-    uniqueID: 156430415
     locked: 0
