@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public struct Card
+public struct CardInfo
 {
     public int KingdomType;
     public int CardType;
     // public List<Buff> BuffList;
+    public Color CardColor;
 }
 
 public class Player : MonoBehaviour
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour
     private GameBoard.TileInfo currentTileInfo;
     private SpriteRenderer sr;
     private GameObject arrow;
-    public List<Card> cardList = new List<Card>();
+    public List<CardInfo> cardList = new List<CardInfo>();
     public layoutgroupcontroller deckcontroller;
     private void Awake()
     {
@@ -79,13 +80,18 @@ public class Player : MonoBehaviour
         arrow.SetActive(display);
     }
 
-    public void AddCard()
+    public void AddCard(int type)
     {
-        Card card;
+        CardInfo card = new CardInfo();
         card.KingdomType = currentTileInfo.GetMapTile().Owner;
-        card.CardType = Random.Range(1, 14);
+
+        if (type == 1) card.CardType = Random.Range(6, 10);
+        else if (type == 2) card.CardType = Random.Range(3, 6);
+        else card.CardType = Random.Range(10, 13);
+
+        card.CardColor = Random.ColorHSV();
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
-        deckcontroller.RefreshLayoutGroup(cardList);
+        layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
     }
 }

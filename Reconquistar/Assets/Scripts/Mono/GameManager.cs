@@ -11,14 +11,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
 
-    private int playerNum = 4;
-    public int currentPlayer;
+    private int playerNum = 1;
+    public static int currentPlayerNum;
     private int currentTurn;
-    public layoutgroupcontroller layoutgroupcontroller;
     public static bool isRolled; // 주사위 굴렸는지
     public static bool isMoving; // 이동 중인지
-    
-    public Player[] players;
+
+    public static Player[] players;
+    public static Player currentPlayer => players[currentPlayerNum];
     private Dictionary<int, int> tilePerPlayer; // player 소유한 타일 수
     private List<int> playerTurnOrder = new List<int>();
 
@@ -32,7 +32,8 @@ public class GameManager : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
-        }else if (Instance != this)
+        }
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
@@ -83,8 +84,8 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log("라운드 순서: " + String.Join(", ", playerTurnOrder));
 
-        currentPlayer = playerTurnOrder[0];
-        players[currentPlayer].SetArrow(true);
+        currentPlayerNum = playerTurnOrder[0];
+        players[currentPlayerNum].SetArrow(true);
         currentTurn = 0;
     }
 
@@ -104,7 +105,7 @@ public class GameManager : MonoBehaviour
     // 이동 -> 다음 플레이어 턴
     private IEnumerator PlayerTurn(bool clockwise)
     {
-        yield return StartCoroutine(players[currentPlayer].PlayerMove(Dice.finalDiceValue, clockwise));
+        yield return StartCoroutine(players[currentPlayerNum].PlayerMove(Dice.finalDiceValue, clockwise));
 
         isMoving = false;
         isRolled = false;
@@ -114,15 +115,15 @@ public class GameManager : MonoBehaviour
 
     private void NextTurn()
     {
-        players[currentPlayer].SetArrow(false);
+        players[currentPlayerNum].SetArrow(false);
         currentTurn++;
 
         // 모두 턴 가졌으면 다음 라운드
         if (currentTurn == playerNum) SortPlayerTurnOrder();
         else
         {
-            currentPlayer = playerTurnOrder[currentTurn];
-            players[currentPlayer].SetArrow(true);
+            currentPlayerNum = playerTurnOrder[currentTurn];
+            players[currentPlayerNum].SetArrow(true);
         }
     }
 
@@ -132,15 +133,15 @@ public class GameManager : MonoBehaviour
         // 싸우는 스크립트 넣는 곳
 
         bool win = true;
-        int currentCellIndex = players[currentPlayer].GetCellIndex();
+        int currentCellIndex = players[currentPlayerNum].GetCellIndex();
         MapTile currentMapTile = GameBoard.tileInfos[currentCellIndex].GetMapTile();
         if (win)
         {
             int currentOwner = currentMapTile.Owner;
-            currentMapTile.ChangeOwner(currentPlayer);
+            currentMapTile.ChangeOwner(currentPlayerNum);
 
             tilePerPlayer[currentOwner]--;
-            tilePerPlayer[currentPlayer]++;
+            tilePerPlayer[currentPlayerNum]++;
         }
 
         SelectionPanel.SetActive(false);
@@ -148,10 +149,9 @@ public class GameManager : MonoBehaviour
     }
 
     // 징집/모집 버튼 클릭 시 작동
-    // 지금은 구분 없이 랜덤으로 추가만
-    public void DraftArmy()
+    public void DraftArmy(int type)
     {
-        players[currentPlayer].AddCard();
+        players[currentPlayerNum].AddCard(type);
         SelectionPanel.SetActive(false);
         NextTurn();
     }

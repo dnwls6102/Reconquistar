@@ -1,57 +1,83 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class layoutgroupcontroller : MonoBehaviour
 {
     public HorizontalLayoutGroup LayoutGroup;
-    public Player[] players;
-    public List<Card> cardList;
-    public int currentPlayer;
-    private GameManager gameManager;
 
-    public GameObject card;
+    public GameObject cardPrefab;
     // Start is called before the first frame update
     public static layoutgroupcontroller Instance;
+    private static CardInfo removedCard;
+
     private void Awake()
     {
         if (Instance == null)
         {
             DontDestroyOnLoad(gameObject);
             Instance = this;
-        }else if (Instance != this)
+        }
+        else if (Instance != this)
         {
             Destroy(gameObject);
         }
     }
-    void Start()
+
+    public void RefreshLayoutGroup(List<CardInfo> cardInfos)
     {
-        gameManager = GameManager.Instance;
-        players = gameManager.players;
-        currentPlayer = gameManager.currentPlayer;
+        SortLayoutGroup(cardInfos);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SortLayoutGroup(List<CardInfo> cardInfos)
     {
-        
-    }
-
-    public void RefreshLayoutGroup(List<Card> cardList)
-    {
-        SortLayoutGroup(cardList);
-    }
-
-    private void SortLayoutGroup(List<Card> cardList)
-    {
-        for (var i = 0; i<LayoutGroup.gameObject.transform.childCount; i ++)
+        for (var i = 0; i < transform.childCount; i++)
         {
-            Destroy(LayoutGroup.gameObject.transform.GetChild(i).gameObject);
+            Destroy(transform.GetChild(i).gameObject);
         }
-        GameObject Card = Instantiate(card) as GameObject;
-        Card.transform.parent = LayoutGroup.gameObject.transform;
-        
+
+        for (int i = 0; i < cardInfos.Count; i++)
+        {
+            GameObject card = Instantiate(cardPrefab);
+            card.transform.SetParent(transform);
+            card.GetComponent<CardDrag>().Initialize(i);
+            card.GetComponent<Image>().color = cardInfos[i].CardColor;
+        }
+    }
+
+    public static void RemoveCard(int cardIndex)
+    {
+        removedCard = GameManager.currentPlayer.cardList[cardIndex];
+        GameManager.currentPlayer.cardList.RemoveAt(cardIndex);
+    }
+
+    public void InsertCard(Vector3 position)
+    {
+        List<CardInfo> cardInfos = GameManager.currentPlayer.cardList;
+        float width = 0;
+        int idx = 0;
+
+        while (width < position.x)
+        {
+            width += 100; // 수치 바꾸기
+            idx++;
+        }
+
+        if (width - 100 / 2 >= position.x) idx--;
+
+        if (idx < cardInfos.Count)
+        {
+            Debug.Log("Insert at " + idx);
+            GameManager.currentPlayer.cardList.Insert(idx, removedCard);
+        }
+        else
+        {
+            Debug.Log("Add at last");
+            GameManager.currentPlayer.cardList.Add(removedCard);
+        }
+        RefreshLayoutGroup(GameManager.currentPlayer.cardList);
     }
 }
