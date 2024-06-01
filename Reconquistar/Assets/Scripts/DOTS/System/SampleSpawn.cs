@@ -8,11 +8,20 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
+using UnitData;
 
 namespace _1.Scripts.DOTS.System
 {
     public partial struct SampleSpawn : ISystem
     {
+        public static NativeHashMap<int, unit> SpawnData = new NativeHashMap<int, unit>(50, Allocator.Temp)
+        {
+            {1,new unit(){hp=340,dmg = 3,defence=3,toEvade = 2,toHit = 1}},
+            {2,new unit()},
+            {3,new unit()},
+            {4,new unit()},
+            {5,new unit()}
+        };
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -257,13 +266,17 @@ namespace _1.Scripts.DOTS.System
 
             foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
             {
-                unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index + (uint)(DateTime.Now.ToBinary()));
+                unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index + (uint)((long)DateTime.Now.ToBinary())); //DateTime은 Burst와 호환이 안됨. 시작할 때만 쓰는 거라서 후속적인 영향이 있는지 확인하고 수정할거임
             }
+
+            
         }
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
-
         }
+
+
     }
+    
 }
