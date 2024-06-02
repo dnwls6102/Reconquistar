@@ -16,7 +16,7 @@
       "dependencies": {
         "com.unity.entities": "1.0.0-pre.65"
       },
-      "hash": "01f1a54b53fdd2220eb2601d1307c3bbcb0d495f"
+      "hash": "e5257fa47a94299366ee68d9ce11b751033ff35d"
     },
     "com.unity.2d.animation": {
       "version": "9.0.4",

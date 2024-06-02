@@ -16,7 +16,21 @@ namespace _1.Scripts.DOTS.System
     {
         public static NativeHashMap<int, unit> SpawnData = new NativeHashMap<int, unit>(50, Allocator.Temp)
         {
-            {1,new unit(){hp=340,dmg = 3,defence=3,toEvade = 2,toHit = 1}},
+            {
+                1,
+                new unit()
+                {
+                    hp=340,
+                    dmg = 3,
+                    defence=3,
+                    toEvade = 2,
+                    toHit = 1,
+                    talent = new NativeList<int>(7,Allocator.Temp){1},
+                    dmgDiceCount = 2,
+                    dmgDice = 6,
+                    order = 4,
+                    range = 1
+                }},
             {2,new unit()},
             {3,new unit()},
             {4,new unit()},
@@ -266,7 +280,8 @@ namespace _1.Scripts.DOTS.System
 
             foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
             {
-                unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index + (uint)((long)DateTime.Now.ToBinary())); //DateTime은 Burst와 호환이 안됨. 시작할 때만 쓰는 거라서 후속적인 영향이 있는지 확인하고 수정할거임
+                unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index); //DateTime은 Burst와 호환이 안됨. 시작할 때만 쓰는 거라서 후속적인 영향이 있는지 확인하고 수정할거임
+                //Debug.Log(unit.ValueRW.dice.NextInt());
             }
 
             
