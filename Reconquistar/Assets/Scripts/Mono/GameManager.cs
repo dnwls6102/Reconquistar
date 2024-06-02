@@ -11,19 +11,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
 
-    private int playerNum = 1;
+    private int playerNum = 4;
     public static int currentPlayerNum;
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지
-    public static bool isMoving; // 이동 중인지
+    public static int isMoving; // 0: 이동 전 / 1: 이동 중 / 2: 이동 후
+    private bool isComplete; // 턴 종료 가능한지
 
     public static Player[] players;
     public static Player currentPlayer => players[currentPlayerNum];
     private Dictionary<int, int> tilePerPlayer; // player 소유한 타일 수
     private List<int> playerTurnOrder = new List<int>();
-
-    [SerializeField] private Button ClockwiseBtn;
-    [SerializeField] private Button CounterClockwiseBtn;
 
     public static GameManager Instance;
     private void Awake()
@@ -43,7 +41,8 @@ public class GameManager : MonoBehaviour
     {
         InitializePlayers();
         isRolled = false;
-        isMoving = false;
+        isMoving = 0;
+        isComplete = false;
 
         SortPlayerTurnOrder();
     }
@@ -92,13 +91,13 @@ public class GameManager : MonoBehaviour
     // 이동 버튼 클릭
     public void ArrowBtnClick(bool clockwise)
     {
-        if (!isRolled || isMoving)
+        if (!isRolled || isMoving >= 1)
         {
-            Debug.Log("이동 중이거나 주사위를 굴리지 않았습니다.");
+            Debug.Log("이미 이동했거나 주사위를 굴리지 않았습니다.");
             return;
         }
 
-        isMoving = true;
+        isMoving = 1;
         StartCoroutine(PlayerTurn(clockwise));
     }
 
@@ -107,14 +106,18 @@ public class GameManager : MonoBehaviour
     {
         yield return StartCoroutine(players[currentPlayerNum].PlayerMove(Dice.finalDiceValue, clockwise));
 
-        isMoving = false;
-        isRolled = false;
+        isMoving = 2;
 
         SelectionPanel.SetActive(true);
     }
 
-    private void NextTurn()
+    public void NextTurn()
     {
+        if (!isComplete)
+        {
+            Debug.Log("아직 턴이 종료되지 않았습니다.");
+            return;
+        }
         players[currentPlayerNum].SetArrow(false);
         currentTurn++;
 
@@ -125,6 +128,11 @@ public class GameManager : MonoBehaviour
             currentPlayerNum = playerTurnOrder[currentTurn];
             players[currentPlayerNum].SetArrow(true);
         }
+
+        layoutgroupcontroller.Instance.RefreshLayoutGroup(players[currentPlayerNum].cardList);
+        isComplete = false;
+        isRolled = false;
+        isMoving = 0;
     }
 
     // 점령 버튼 클릭 시 작동
@@ -145,7 +153,7 @@ public class GameManager : MonoBehaviour
         }
 
         SelectionPanel.SetActive(false);
-        NextTurn();
+        isComplete = true;
     }
 
     // 징집/모집 버튼 클릭 시 작동
@@ -153,6 +161,6 @@ public class GameManager : MonoBehaviour
     {
         players[currentPlayerNum].AddCard(type);
         SelectionPanel.SetActive(false);
-        NextTurn();
+        isComplete = true;
     }
 }
