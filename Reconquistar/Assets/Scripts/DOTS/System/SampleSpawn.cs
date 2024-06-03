@@ -269,7 +269,7 @@ namespace _1.Scripts.DOTS.System
                 unit.ValueRW.dice = Random.CreateFromIndex((uint)entity.Index + (uint)((long)DateTime.Now.ToBinary())); //DateTime은 Burst와 호환이 안됨. 시작할 때만 쓰는 거라서 후속적인 영향이 있는지 확인하고 수정할거임
             }
 
-            
+
         }
         [BurstCompile]
         public void OnDestroy(ref SystemState state)

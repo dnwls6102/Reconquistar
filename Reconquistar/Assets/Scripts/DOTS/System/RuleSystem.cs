@@ -87,7 +87,7 @@ namespace _1.Scripts.DOTS.System
                 pAtkReset = SystemAPI.GetComponentLookup<PriorityAttackDoneTag>();
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
-                    if (unit.ValueRW.order+unit.ValueRW.dice.NextInt(1,6)+unit.ValueRW.dice.NextInt(1,6)< 10)
+                    if (unit.ValueRW.order + unit.ValueRW.dice.NextInt(1, 6) + unit.ValueRW.dice.NextInt(1, 6) < 10)
                     {
                         SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
                         ecb.DestroyEntity(entity);

@@ -13,6 +13,8 @@ namespace _1.Scripts.DOTS.System
         EntityQuery PriorityMovingTagQuery;
         EntityQuery unitQuery;
         EntityQuery spawnerQuery;
+        EntityQuery priorityMoveDoneQuery;
+        EntityQuery normalActionDoneQuery;
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
