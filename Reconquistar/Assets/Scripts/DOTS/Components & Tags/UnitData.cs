@@ -15,6 +15,6 @@ namespace UnitData
         public int dmgDiceCount; //대미지 주사위 개수(예시.6면체 주사위 1개/2개...)
         public int order; //사기
         public int range; //사거리
-        public NativeList<int> talent; //특성. 각 특성 태그 컴포넌트를 int로 표시한 다음, 생성할 때 숫자에 맞는 태그 컴포넌트를 추가한다
+        public NativeList<int> talent; //특성. 각 특성 태그 컴포넌트를 int로 표시한 다음, 생성할 때 숫자에 맞는 태그 컴포넌트를 추가한다 
     }
 }
