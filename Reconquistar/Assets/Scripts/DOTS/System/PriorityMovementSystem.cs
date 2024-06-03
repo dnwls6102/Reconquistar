@@ -21,8 +21,11 @@ namespace _1.Scripts.DOTS.System
         ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
 
         [BurstCompile]
-        void OnCreate(ref SystemState state)
+        public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<MapMakerComponentData>();
+            state.RequireForUpdate<SampleSpawnData>();
+            state.RequireForUpdate<SampleUnitComponentData>();
             //DoneWithAnyQuery : 활성화된 행동 완료 태그들을 수집 --> 해당 쿼리들이 비어있다면 행동 완료한 유닛들이 없다는 의미 == 초기화가 잘 진행되었다는 의미
             priorityMoveDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMoveDoneTag>().Build(ref state);
             priorityAttackDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackDoneTag>().Build(ref state);
@@ -35,8 +38,9 @@ namespace _1.Scripts.DOTS.System
         }
 
         // Update is called once per frame
-        void OnUpdate(ref SystemState state)
+        public void OnUpdate(ref SystemState state)
         {
+            sampleUnitLookup.Update(ref state);
             //GameManager역할을 하는 SampleSpawner가 생성되지 않으면 Update구문을 실행시키지 않음
             if (spawnerQuery.CalculateEntityCount() == 0)
             {
@@ -49,7 +53,7 @@ namespace _1.Scripts.DOTS.System
             NativeArray<int2> moves = new(2, Allocator.Temp);
 
             //모든 유닛들의 행동 완료 태그 초기화 작업이 잘 이루어졌는가?
-            if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
+           // if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
             {
                 Debug.Log("조건 통과");
                 Debug.Log("" + priorityMovingTagQuery.IsEmpty);
@@ -62,7 +66,6 @@ namespace _1.Scripts.DOTS.System
                         MapMaker = mapMaker,
                         SampleUnits = sampleUnits,
                         SampleUnitComponents = sampleUnitLookup,
-                        
                     };
                     findPMoveJob.ScheduleParallel();
                     state.Dependency.Complete();
@@ -78,6 +81,7 @@ namespace _1.Scripts.DOTS.System
                         if (!state.EntityManager.Exists(target.ValueRO.targetEntity) ||
                             !SystemAPI.HasComponent<SampleUnitComponentData>(target.ValueRO.targetEntity))
                         {
+                            Debug.Log("11");
                             SystemAPI.SetComponentEnabled<PriorityMoveDoneTag>(entity, true);
                             continue;
                         } //이 유닛의 target 엔티티가 없는 경우 또는 이 유닛의 target 엔티티가 SampleUnit이 아닌 경우
@@ -106,6 +110,7 @@ namespace _1.Scripts.DOTS.System
                                     break;
                                 }
                                 {
+                                    //Debug.Log("11");
                                     SystemAPI.SetComponentEnabled<PriorityMoveDoneTag>(entity, true);
                                 }
                             }

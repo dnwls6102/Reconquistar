@@ -11,6 +11,7 @@ using UnityEngine;
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct FindPriorityMoveJob : IJobEntity //자유 이동 태그를 갖고 있는 유닛들의 목적지만 찾는 Job
     {
         [ReadOnly] public NativeArray<Entity> SampleUnits; //RuleSystem에서 가져온 SampleUnitComponents를 갖고 있는 엔티티들 배열
@@ -49,11 +50,11 @@ namespace _1.Scripts.DOTS.System.Jobs
             {
                 if (targetIndex.x - currentUnit.index.x > 0) //targetIndex가 현재 유닛보다 오른쪽에 있는 경우
                 {
-                    flipx.Value = new int2(-1, 0); // flipx 발동 
+                    flipx.Value = new int2(1, 0); // flipx 발동 
                 }
                 else if (targetIndex.x - currentUnit.index.x < 0) //targetIndex가 현재 유닛보다 왼쪽에 있는 경우
                 {
-                    flipx.Value = new int2(1, 0); // flipx 취소
+                    flipx.Value = new int2(-1, 0); // flipx 취소
                 }
             }
 
