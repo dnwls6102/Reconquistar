@@ -5,7 +5,7 @@ namespace Mono.MonoToSystem
 {
     public struct Deck : IComponentData
     {
-        public NativeList<CardInfo> Card;
+        public NativeList<int> Card;
         public int team;
     }
     

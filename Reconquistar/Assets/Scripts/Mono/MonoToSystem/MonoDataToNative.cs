@@ -1,4 +1,6 @@
-﻿using Unity.Collections;
+﻿using System;
+using System.Collections.Generic;
+using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
 
@@ -10,10 +12,22 @@ namespace Mono.MonoToSystem
     public class MonoDataToNative : MonoBehaviour
     {
         private Entity deckentity;
+        public Dictionary<int, List<int>> DeckList = new Dictionary<int, List<int>>()
+        {
+            {1, new List<int>(){1,2,3,4}},
+            {2, new List<int>(){4,5,6,67,7}}
+        };
         public static NativeList<Deck> test = new NativeList<Deck>(4,Allocator.Temp)
         {
-            {new Deck(){Card = new NativeList<CardInfo>(30,Allocator.Temp){}}}
+            {new Deck(){Card = new NativeList<int>(30,Allocator.Temp){},team = 1}}
         };
+
+        private void Awake()
+        {
+            throw new NotImplementedException();
+            SpawnEntity();
+        }
+
         public void SpawnEntity()
               {
                   var ecb = new EntityCommandBuffer(Allocator.Temp);
