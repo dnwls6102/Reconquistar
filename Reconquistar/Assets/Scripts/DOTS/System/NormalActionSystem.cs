@@ -10,16 +10,27 @@ namespace _1.Scripts.DOTS.System
 {
     public partial struct NormalActionSystem : ISystem
     {
+        EntityQuery spawnerQuery;
+        EntityQuery unitQuery;
+        EntityQuery tileQuery;
+        ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
         // Start is called before the first frame update
-        void OnCreate()
+        void OnCreate(ref SystemState state)
         {
-
+            spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
+            unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
+            tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
+            sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
         }
 
         // Update is called once per frame
-        void OnUpdate()
+        void OnUpdate(ref SystemState state)
         {
-
+            sampleUnitLookup.Update(ref state);
+            if (spawnerQuery.CalculateEntityCount() == 0)
+            {
+                return;
+            }
         }
     }
 }

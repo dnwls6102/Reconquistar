@@ -11,9 +11,9 @@ namespace _1.Scripts.DOTS.System
 {
     public partial struct PriorityMovementSystem : ISystem
     {
-        EntityQuery priorityMoveDoneWithAnyQuery;
-        EntityQuery priorityAttackDoneWithAnyQuery;
-        EntityQuery normalActionDoneWithAnyQuery;
+        //EntityQuery priorityMoveDoneWithAnyQuery;
+        //EntityQuery priorityAttackDoneWithAnyQuery;
+        //EntityQuery normalActionDoneWithAnyQuery;
         EntityQuery priorityMovingTagQuery;
         EntityQuery spawnerQuery;
         EntityQuery tileQuery;
@@ -27,9 +27,9 @@ namespace _1.Scripts.DOTS.System
             state.RequireForUpdate<SampleSpawnData>();
             state.RequireForUpdate<SampleUnitComponentData>();
             //DoneWithAnyQuery : 활성화된 행동 완료 태그들을 수집 --> 해당 쿼리들이 비어있다면 행동 완료한 유닛들이 없다는 의미 == 초기화가 잘 진행되었다는 의미
-            priorityMoveDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMoveDoneTag>().Build(ref state);
-            priorityAttackDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackDoneTag>().Build(ref state);
-            normalActionDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<NormalActionDoneTag>().Build(ref state);
+            //priorityMoveDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMoveDoneTag>().Build(ref state);
+            //priorityAttackDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackDoneTag>().Build(ref state);
+            //normalActionDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<NormalActionDoneTag>().Build(ref state);
             priorityMovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag>().WithOptions(EntityQueryOptions.IgnoreComponentEnabledState).Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
@@ -55,8 +55,8 @@ namespace _1.Scripts.DOTS.System
             //모든 유닛들의 행동 완료 태그 초기화 작업이 잘 이루어졌는가?
            // if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
             {
-                Debug.Log("조건 통과");
-                Debug.Log("" + priorityMovingTagQuery.IsEmpty);
+                //Debug.Log("조건 통과");
+                //Debug.Log("" + priorityMovingTagQuery.IsEmpty);
                 if(!priorityMovingTagQuery.IsEmpty)
                 {
                     Debug.Log("자유 이동 분기 작동");
@@ -81,7 +81,6 @@ namespace _1.Scripts.DOTS.System
                         if (!state.EntityManager.Exists(target.ValueRO.targetEntity) ||
                             !SystemAPI.HasComponent<SampleUnitComponentData>(target.ValueRO.targetEntity))
                         {
-                            Debug.Log("11");
                             SystemAPI.SetComponentEnabled<PriorityMoveDoneTag>(entity, true);
                             continue;
                         } //이 유닛의 target 엔티티가 없는 경우 또는 이 유닛의 target 엔티티가 SampleUnit이 아닌 경우
@@ -117,6 +116,7 @@ namespace _1.Scripts.DOTS.System
                         }
                     }
                 }
+                
                 new PriorityMovementJob()
                 {
                     Time = (float)SystemAPI.Time.DeltaTime,
@@ -124,6 +124,10 @@ namespace _1.Scripts.DOTS.System
                     //ECBWriter = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
                 }.ScheduleParallel();
                 state.Dependency.Complete();
+                Debug.Log("자유 이동 완료");
+                //DoneTag 세우기 Job 할당
+                /*new PMoveDoneJob().ScheduleParallel();
+                state.Dependency.Complete();*/
             }
         }
     }

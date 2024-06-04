@@ -15,12 +15,16 @@ namespace _1.Scripts.DOTS.System
         EntityQuery spawnerQuery;
         EntityQuery priorityMoveDoneQuery;
         EntityQuery normalActionDoneQuery;
+        
 
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
             //
             state.RequireForUpdate<MapMakerComponentData>();
+            state.RequireForUpdate<SampleSpawnData>();
+            state.RequireForUpdate<SampleUnitComponentData>();
+            priorityMoveDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<PriorityMoveDoneTag>().Build(ref state);
             MovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
             PriorityMovingTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag>().Build(ref state);
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);

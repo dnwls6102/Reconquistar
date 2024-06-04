@@ -14,13 +14,15 @@ using UnityEngine;
 namespace _1.Scripts.DOTS.System.Jobs
 {
     [BurstCompile]
+    [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct PriorityMovementJob : IJobEntity
     {
         public float Time;
         [ReadOnly] public MapMakerComponentData MapMaker;
         //public EntityCommandBuffer.ParallelWriter ECBWriter;
         // excute 쿼리에 moving tag 추가 예정
-        public void Execute(ref LocalTransform transform, EnabledRefRW<PriorityMovingTag> movingTag, ref SampleUnitComponentData sampleUnitComponentData)
+        //현재 Execute의 매개변수에 PriorityMoveDoneTag를 추가하고, DoneTag의 플래그를 세우면 프레임 드랍 발생(이유는 모름)
+        public void Execute(ref LocalTransform transform, EnabledRefRW<PriorityMovingTag> movingTag, EnabledRefRW<PriorityMoveDoneTag> doneTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
             //Debug.Log("PMove");
             // MovingTag를 달고 있는 Unit의 transform이 Unit의 목표지점(destIndex)와 같을 경우?
@@ -30,12 +32,14 @@ namespace _1.Scripts.DOTS.System.Jobs
                 // Debug.Log("Cancel Moving Tag of "+sampleUnitComponentData.index +sampleUnitComponentData.destIndex);
                 sampleUnitComponentData.index = sampleUnitComponentData.destIndex;
                 movingTag.ValueRW = false; //Unit의 index 정보를 destIndex로 바꾸고 movingTag 없애기
+                doneTag.ValueRW = true;
             }
             else // 아직 일치하지 않을 경우
             {
                 transform.Position = MoveTowards(transform.Position, Int2tofloat3(sampleUnitComponentData.destIndex), Time * sampleUnitComponentData.movementspeed);
                 //Debug.Log("Moving entity" + sampleUnitComponentData.index);
                 // moving tag 취소
+                //doneTag.ValueRW = true;
             }
         }
 
