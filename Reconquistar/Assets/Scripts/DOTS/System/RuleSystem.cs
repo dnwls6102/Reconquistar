@@ -47,6 +47,9 @@ namespace _1.Scripts.DOTS.System
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
             sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
             startLookup = state.GetComponentLookup<StartPause>(true);
+            pMoveReset = state.GetComponentLookup<PriorityMoveDoneTag>();
+            MoveReset = state.GetComponentLookup<NormalActionDoneTag>();
+            pAtkReset = state.GetComponentLookup<PriorityAttackDoneTag>();
         }
 
         [BurstCompile]
@@ -55,6 +58,9 @@ namespace _1.Scripts.DOTS.System
             var dt = SystemAPI.Time.DeltaTime;
             sampleUnitLookup.Update(ref state);
             startLookup.Update(ref state);
+            pMoveReset.Update(ref state);
+            MoveReset.Update(ref state);
+            pAtkReset.Update(ref state);
            // seed = new Random((uint)(SystemAPI.Time.DeltaTime*1000));
             //spawnerEntity = state.EntityManager.CreateEntityQuery(new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>()).GetSingletonEntity();
 
@@ -82,31 +88,28 @@ namespace _1.Scripts.DOTS.System
                 //job에서는 각 엔티티를 가져와서 엔티티의 세력 데이터를 사기 체크 필요한 세력 데이터와 비교 후 사기 체크 결정. 통과 시 태그 초기화(행동 완료 태그 비활성화).
                 EntityCommandBuffer ecb = new(Allocator.Temp);
                 //체력 0인 유닛 파괴
+                
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
-                    if (unit.ValueRW.order + unit.ValueRW.dice.NextInt(1, 6) + unit.ValueRW.dice.NextInt(1, 6) < 10)
+                    //사기 체크. 지금은 테스트용으로 비활성화
+                    //if (unit.ValueRW.order + unit.ValueRW.dice.NextInt(1, 6) + unit.ValueRW.dice.NextInt(1, 6) < 10) 
                     {
                         SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
                         //ecb.DestroyEntity(entity);
                         //Debug.Log("Delete");
-                        continue;
+                        if (pMoveReset.HasComponent(entity))
+                        {
+                            pMoveReset.SetComponentEnabled(entity,false);
+                        }
+                        if (MoveReset.HasComponent(entity))
+                        {
+                            MoveReset.SetComponentEnabled(entity,false);
+                        }
+                        if (pAtkReset.HasComponent(entity))
+                        {
+                            pAtkReset.SetComponentEnabled(entity,false);
+                        }
                     }
-                }
-                pMoveReset = SystemAPI.GetComponentLookup<PriorityMoveDoneTag>();
-                MoveReset = SystemAPI.GetComponentLookup<NormalActionDoneTag>();
-                pAtkReset = SystemAPI.GetComponentLookup<PriorityAttackDoneTag>();
-
-                if (MoveReset.HasComponent(state.SystemHandle))
-                {
-                    MoveReset.SetComponentEnabled(state.SystemHandle,false);
-                }
-                if (pMoveReset.HasComponent(state.SystemHandle))
-                {
-                    pMoveReset.SetComponentEnabled(state.SystemHandle,false);
-                }
-                if (pAtkReset.HasComponent(state.SystemHandle))
-                {
-                    pAtkReset.SetComponentEnabled(state.SystemHandle,false);
                 }
                 ecb.Playback(state.EntityManager);
                 tiles.Dispose();

@@ -23,7 +23,7 @@ namespace _1.Scripts.DOTS.System
                 .WithAspect<AnimatorAspect>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState);
             var movableQuery = state.GetEntityQuery(queryBuilder);
-            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<MovingTag>());
+            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<PriorityMovingTag>());
             systemData.PMovableQuery = movableQuery;
 
             _ = state.EntityManager.AddComponentData(state.SystemHandle, systemData);

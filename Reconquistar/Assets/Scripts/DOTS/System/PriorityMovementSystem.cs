@@ -46,14 +46,12 @@ namespace _1.Scripts.DOTS.System
             {
                 return;
             }
-
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
             NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
             NativeArray<int2> moves = new(2, Allocator.Temp);
-
             //모든 유닛들의 행동 완료 태그 초기화 작업이 잘 이루어졌는가?
-           // if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
+           if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
             {
                 Debug.Log("조건 통과");
                 Debug.Log("" + priorityMovingTagQuery.IsEmpty);
