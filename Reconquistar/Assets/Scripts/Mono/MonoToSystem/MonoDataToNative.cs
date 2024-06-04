@@ -1,12 +1,13 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
 
 // 각 플레이어의 덱 리스트를 가져와서 NativeList에 추가하는 클래스. 
 // 덱 리스트를 가져오는 건 Monopoly 씬에서, NativeList에 추가하는 건 Sample 씬에서 진행해야 함.
 // 현재 테스트용 클래스이며, 추후에 GameManager에 통합할 수 있음
 namespace Mono.MonoToSystem
 {
-    public class MonoDataToNative
+    public class MonoDataToNative : MonoBehaviour
     {
         private Entity deckentity;
         public static NativeList<Deck> test = new NativeList<Deck>(4,Allocator.Temp)
