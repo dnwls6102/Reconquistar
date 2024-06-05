@@ -35,6 +35,7 @@ public class SampleShootingUnitAuthoring : MonoBehaviour
             AddComponent(entity, new LazyTag());
             AddComponent(entity, new TargetEntityData());
             AddComponent(entity, new NormalActionDoneTag());
+            AddComponent(entity, new ReloadingDoneTag());
         }
     }
 }
