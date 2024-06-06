@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using _1.Scripts.DOTS.Authoring_baker_;
+using DOTS.Authoring_baker_;
 using Unity.Collections;
 using Unity.Entities;
 using UnityEngine;
@@ -11,32 +13,61 @@ namespace Mono.MonoToSystem
 {
     public class MonoDataToNative : MonoBehaviour
     {
+        private int k = 0;
+        private Entity _spawnerEntity;
         private Entity deckentity;
-        public Dictionary<int, List<int>> DeckList = new Dictionary<int, List<int>>()
+        private EntityManager _entityManager;
+        public Dictionary<int, List<int>> deckList = new Dictionary<int, List<int>>()
         {
             {1, new List<int>(){1,2,3,4}},
             {2, new List<int>(){4,5,6,67,7}}
         };
-        public static NativeList<Deck> test = new NativeList<Deck>(4,Allocator.Temp)
-        {
-            {new Deck(){Card = new NativeList<int>(30,Allocator.Temp){},team = 1}}
-        };
+        public NativeList<int> test; 
 
         private void Awake()
         {
-            throw new NotImplementedException();
-            SpawnEntity();
+            _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        }
+
+        private void LateUpdate()
+        {
+            if (Input.GetMouseButtonUp(0))
+            {
+                SpawnEntity();
+            }
         }
 
         public void SpawnEntity()
-              {
-                  var ecb = new EntityCommandBuffer(Allocator.Temp);
-                  ecb.Instantiate(deckentity);
-                  //DeckcomponentData () 카드 리스트만 줄거에요. 그리고 각 카드의 데이터 구조체 안에는, 해당 카드가 얻은 시너지 효과 리스트, 그리고 몇명의 유닛을 생성할지
-                  //엔티티 생성할 때 순서: 1. 다음으로 생성하려는 카드의 정보를 가져온다. 2. 그 카드의 숫자와 맞는 유닛 데이터를 SpawnData에서 가져온다
-                  //3. 카드의 정보에서 현재 가진 시너지 효과 리스트를 참조해서 tagComponent를 추가하거나, 유닛 데이터를 추가한다
-                  //4. 생성한다(이때, 한줄 넘어가면 다음 줄에 계속)
-              }
+        {
+            var sampleData = _entityManager.CreateEntity();
+            _entityManager.SetName(sampleData,"sampleDataTest");
+            _entityManager.AddBuffer<testData>(sampleData);
+            var testHashData = _entityManager.CreateEntity();
+            _entityManager.SetName(testHashData,"testHashData");
+            DynamicBuffer<testData> TestBuffer = _entityManager.GetBuffer<testData>(sampleData);
+            TestBuffer.Add(new testData() { HashToCardEntity = testHashData });
+            
+            //프리팹 사용 없이 생성한 엔티티. sampleData는 하나의 덱 엔티티로, 카드들을 엔티티로 이루어진 dynamic buffer로 관리한다.
+            //testHashData는 하나의 카드 엔티티. 이 안에 카드가 가진 시너지를 dynamic buffer로 추가한다.
+
+
+
+            /*
+            _spawnerEntity = _entityManager.CreateEntityQuery(typeof(DataEntityData)).GetSingletonEntity();
+            deckentity = _entityManager.GetComponentData<DataEntityData>(_spawnerEntity).DataEntityPrefab;
+            var ecb = new EntityCommandBuffer(Allocator.Temp);
+            ecb.Instantiate(deckentity);
+            ecb.Playback(_entityManager);
+            ecb.Dispose();
+
+            var ecb2 = new EntityCommandBuffer(Allocator.Temp);
+            ecb2.Playback(_entityManager);
+            ecb2.Dispose();*/
+            //DeckcomponentData () 카드 리스트만 줄거에요. 그리고 각 카드의 데이터 구조체 안에는, 해당 카드가 얻은 시너지 효과 리스트, 그리고 몇명의 유닛을 생성할지
+            //엔티티 생성할 때 순서: 1. 다음으로 생성하려는 카드의 정보를 가져온다. 2. 그 카드의 숫자와 맞는 유닛 데이터를 SpawnData에서 가져온다
+            //3. 카드의 정보에서 현재 가진 시너지 효과 리스트를 참조해서 tagComponent를 추가하거나, 유닛 데이터를 추가한다
+            //4. 생성한다(이때, 한줄 넘어가면 다음 줄에 계속)
+        }
     }
     
 }

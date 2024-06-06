@@ -3,7 +3,7 @@ using Unity.Entities;
 
 namespace Mono.MonoToSystem
 {
-    public struct Deck : IComponentData
+    [ChunkSerializable] public struct Deck : IComponentData
     {
         public NativeList<int> Card;
         public int team;
