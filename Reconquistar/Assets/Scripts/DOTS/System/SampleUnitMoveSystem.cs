@@ -1,4 +1,4 @@
-﻿using _1.Scripts.DOTS.Authoring_baker_;
+﻿/*using _1.Scripts.DOTS.Authoring_baker_;
 using _1.Scripts.DOTS.Components___Tags;
 using _1.Scripts.DOTS.System.Jobs;
 using Unity.Burst;
@@ -68,4 +68,4 @@ namespace _1.Scripts.DOTS.System
 
         }
     }
-}
+}*/

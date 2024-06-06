@@ -115,6 +115,7 @@ namespace _1.Scripts.DOTS.System
                         }
                     }
                 }
+                tiles.Dispose();
                 new PriorityMovementJob()
                 {
                     Time = (float)SystemAPI.Time.DeltaTime,
