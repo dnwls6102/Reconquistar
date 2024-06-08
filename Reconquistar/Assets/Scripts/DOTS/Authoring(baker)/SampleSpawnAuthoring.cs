@@ -8,7 +8,6 @@ namespace _1.Scripts.DOTS.Authoring_baker_
         public GameObject sampleUnit;
         public GameObject samplePMoveUnit;
         public GameObject SampleShootingUnit;
-        public GameObject DataEntity;
         public int number;
         public int pMoveNum;
         public int ShootingUnitNum;
@@ -26,10 +25,6 @@ namespace _1.Scripts.DOTS.Authoring_baker_
                 {
                     SampleEntityPrefab = GetEntity(authoring.sampleUnit, TransformUsageFlags.Dynamic),
                     number = authoring.number,
-                });
-                AddComponent(entity,new DataEntityData()
-                {
-                    DataEntityPrefab =  GetEntity(authoring.DataEntity, TransformUsageFlags.Dynamic)
                 });
                 AddComponent(entity, new SamplePMoveSpawnData()
                 {
@@ -66,10 +61,6 @@ namespace _1.Scripts.DOTS.Authoring_baker_
         public int number;
     }
 
-    public struct DataEntityData : IComponentData
-    {
-        public Entity DataEntityPrefab;
-    }
     public struct SamplePMoveSpawnData : IComponentData
     {
         public Entity SamplePMoveEntityPrefab;

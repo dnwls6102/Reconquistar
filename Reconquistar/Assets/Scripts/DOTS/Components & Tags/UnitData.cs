@@ -1,7 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
 
-namespace UnitData
+namespace _1.Scripts.DOTS.Components___Tags
 {
     //유닛 생성 시 초기화하는 용도. 유닛 생성할 때만 사용되고, 여기 있는 데이터를 각 엔티티에 적용시키고, 그 이후에는 각 엔티티에서 각자의 데이터를 가져온다.
     public struct unit : IComponentData
@@ -15,6 +15,7 @@ namespace UnitData
         public int dmgDiceCount; //대미지 주사위 개수(예시.6면체 주사위 1개/2개...)
         public int order; //사기
         public int range; //사거리
-        public NativeList<int> talent; //특성. 각 특성 태그 컴포넌트를 int로 표시한 다음, 생성할 때 숫자에 맞는 태그 컴포넌트를 추가한다 
+        public bool HasPmove; // 자유 이동 유무
+        public bool HasPatk; // 자유 공격 유무
     }
 }

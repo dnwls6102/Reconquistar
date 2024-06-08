@@ -27,26 +27,42 @@ namespace Mono.MonoToSystem
         private void Awake()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+            
+            SpawnEntity();
         }
 
-        private void LateUpdate()
-        {
-            if (Input.GetMouseButtonUp(0))
-            {
-                SpawnEntity();
-            }
-        }
+        // private void LateUpdate()
+        // {
+        //     if (Input.GetMouseButtonUp(0))
+        //     {
+        //     }
+        // }
 
         public void SpawnEntity()
         {
-            var sampleData = _entityManager.CreateEntity();
-            _entityManager.SetName(sampleData,"sampleDataTest");
-            _entityManager.AddBuffer<testData>(sampleData);
-            var testHashData = _entityManager.CreateEntity();
-            _entityManager.SetName(testHashData,"testHashData");
-            DynamicBuffer<testData> TestBuffer = _entityManager.GetBuffer<testData>(sampleData);
-            TestBuffer.Add(new testData() { HashToCardEntity = testHashData });
-            
+            var DeckManagerEntity =_entityManager.CreateEntity();
+            var DeckEntity = _entityManager.CreateEntity();
+            var CardEntity = _entityManager.CreateEntity();
+            _entityManager.SetName(DeckManagerEntity,"DeckManagerEntity");
+            _entityManager.SetName(DeckEntity,"DeckEntity");
+            _entityManager.SetName(CardEntity,"CardEntity");
+            _entityManager.AddBuffer<DeckListBuffer>(DeckManagerEntity);
+            _entityManager.AddBuffer<CardListBuffer>(DeckEntity);
+            _entityManager.AddBuffer<SynergyListBuffer>(CardEntity);
+            _entityManager.AddComponent<DeckHeader>(DeckEntity);
+            _entityManager.AddComponent<CardHeader>(CardEntity);
+            DynamicBuffer<DeckListBuffer> TestDeckListBuffer =
+                _entityManager.GetBuffer<DeckListBuffer>(DeckManagerEntity);
+            DynamicBuffer<CardListBuffer> TestBuffer = _entityManager.GetBuffer<CardListBuffer>(DeckEntity);
+            DynamicBuffer<SynergyListBuffer> TestSynBuffer = _entityManager.GetBuffer<SynergyListBuffer>(CardEntity);
+            TestDeckListBuffer.Add(new DeckListBuffer(){HashToDeckEntity = DeckEntity});
+            TestBuffer.Add(new CardListBuffer() { HashToCardEntity = CardEntity });
+            TestSynBuffer.Add(new SynergyListBuffer() { SynNumber = 2 });
+            TestSynBuffer.Add(new SynergyListBuffer() { SynNumber = 2 });
+            TestSynBuffer.Add(new SynergyListBuffer() { SynNumber = 2 });
+            _entityManager.AddComponent<DeckLoadingDoneTag>(DeckManagerEntity);
+            _entityManager.SetComponentEnabled<DeckLoadingDoneTag>(DeckManagerEntity,true);
+            //TestSynBuffer.Add(new SynergyListBuffer() { SynNumber = 2 });
             //프리팹 사용 없이 생성한 엔티티. sampleData는 하나의 덱 엔티티로, 카드들을 엔티티로 이루어진 dynamic buffer로 관리한다.
             //testHashData는 하나의 카드 엔티티. 이 안에 카드가 가진 시너지를 dynamic buffer로 추가한다.
 

@@ -14,20 +14,41 @@ namespace DOTS.Authoring_baker_
             {
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
                 //AddComponent(entity, new DeckListData());
-                DynamicBuffer<testData> testDatas = AddBuffer<testData>(entity);
+                DynamicBuffer<CardListBuffer> testDatas = AddBuffer<CardListBuffer>(entity);
                 
             }
         }
     }
 
-[InternalBufferCapacity(20)]
-    public struct testData : IBufferElementData
+
+    [InternalBufferCapacity(20)]
+    public struct CardListBuffer : IBufferElementData
     {
         public Entity HashToCardEntity;
     }
 
-    public struct testSyn : IBufferElementData
+    [InternalBufferCapacity(10)]
+    public struct SynergyListBuffer : IBufferElementData
     {
         public int SynNumber;
+    } 
+    
+    [InternalBufferCapacity(4)]
+    public struct DeckListBuffer : IBufferElementData
+    {
+        public Entity HashToDeckEntity;
+    }
+    public struct DeckHeader : IComponentData
+    {
+        public int team;
+    }
+
+    public struct CardHeader : IComponentData
+    {
+        public int cardNum;
+    }
+
+    public struct DeckLoadingDoneTag : IComponentData, IEnableableComponent
+    {
     }
 }

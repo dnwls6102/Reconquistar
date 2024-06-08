@@ -8,7 +8,6 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
 using Random = Unity.Mathematics.Random;
-using UnitData;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -25,7 +24,8 @@ namespace _1.Scripts.DOTS.System
                     defence=3,
                     toEvade = 2,
                     toHit = 1,
-                    talent = new NativeList<int>(7,Allocator.Temp){1}, //1번 = 자유이동
+                    HasPatk = false,
+                    HasPmove = false,
                     dmgDiceCount = 2,
                     dmgDice = 6,
                     order = 4,
@@ -39,8 +39,7 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            Debug.Log(SpawnData[1].defence);
-            int i = SpawnData[1].hp;
+            Debug.Log(string.Format("{0}",SpawnData[1].HasPatk));
             state.RequireForUpdate<SampleSpawnData>();
             state.RequireForUpdate<SamplePMoveSpawnData>();
             state.RequireForUpdate<MapTileAuthoringComponentData>();
