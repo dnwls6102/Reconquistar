@@ -1,6 +1,7 @@
 ﻿using System;
 using _1.Scripts.DOTS.Authoring_baker_;
 using _1.Scripts.DOTS.Components___Tags;
+using DOTS.Authoring_baker_;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -44,6 +45,7 @@ namespace _1.Scripts.DOTS.System
             state.RequireForUpdate<SamplePMoveSpawnData>();
             state.RequireForUpdate<MapTileAuthoringComponentData>();
             state.RequireForUpdate<MapMakerComponentData>();
+            state.RequireForUpdate<DeckLoadingDoneTag>();
         }
 
         [BurstCompile]
@@ -285,6 +287,13 @@ namespace _1.Scripts.DOTS.System
                 //Debug.Log(unit.ValueRW.dice.NextInt());
             }
 
+            var DeckManagerEntity = SystemAPI.GetSingletonEntity<DeckListBuffer>();
+            DynamicBuffer<DeckListBuffer> TestDeckListBuffer = SystemAPI.GetBuffer<DeckListBuffer>(DeckManagerEntity);
+            var DeckEntity=TestDeckListBuffer[0].HashToDeckEntity;
+            DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity);
+            var CardEntity = CardListBuffer[0].HashToCardEntity;
+            DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity);
+            Debug.Log(string.Format("{0}",TestSynBuffer[0].SynNumber));
             
         }
         [BurstCompile]
