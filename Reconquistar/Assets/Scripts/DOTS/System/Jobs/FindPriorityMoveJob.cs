@@ -20,8 +20,8 @@ namespace _1.Scripts.DOTS.System.Jobs
         //public ComponentLookup<TargetEntityData> TargetEntityComponents; //RuleSystem에서 가져온 TargetEntityLookup
         //public ComponentLookup<Flip> FlipComponents;
 
-        // 전체 유닛 및 유닛 엔티티도 가져와야...
-        public void Execute(in SampleUnitComponentData currentUnit, PriorityMovingTag PMoveTag, ref TargetEntityData target, ref Flip flipx)
+        // 목표 대상을 찾지 못한 경우 
+        public void Execute(in SampleUnitComponentData currentUnit, PriorityMovingTag PMoveTag, EnabledRefRW<AttackTag> attackTag, EnabledRefRW<AttackDoneTag> doneTag, ref TargetEntityData target, ref Flip flipx)
         {
             //비교 기준 : 자유 이동 유닛들. 비교 후 target 선정을 Execute로 가져온 currentUnit으로 해야함
 
@@ -56,10 +56,15 @@ namespace _1.Scripts.DOTS.System.Jobs
                 {
                     flipx.Value = new int2(-1, 0); // flipx 취소
                 }
+                //찾은 타겟이 범위 안에 있을 시 Attack Tag 활성화
+                if (math.abs(currentUnit.index.x - targetIndex.x) + math.abs(currentUnit.index.y - targetIndex.y) <= 1)
+                {
+                    attackTag.ValueRW = true;
+                }
             }
 
-            // else
-            //     return;
+            else
+                doneTag.ValueRW = true;
         }
     }
 }

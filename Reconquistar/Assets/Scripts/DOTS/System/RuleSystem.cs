@@ -20,6 +20,7 @@ namespace _1.Scripts.DOTS.System
         EntityQuery spawnerQuery;
         EntityQuery priorityMoveDoneQuery;
         EntityQuery reloadingDoneQuery;
+        EntityQuery AttackDoneQuery;
         EntityQuery priorityAttackDoneQuery;
         EntityQuery normalActionDoneQuery;
         //EntityQuery pMovingTagQuery;
@@ -31,6 +32,7 @@ namespace _1.Scripts.DOTS.System
          ComponentLookup<NormalActionDoneTag> MoveReset;
         ComponentLookup<PriorityAttackDoneTag> pAtkReset;
         ComponentLookup<ReloadingDoneTag> reloadingDoneReset;
+        ComponentLookup<AttackDoneTag> attackReset;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -42,6 +44,7 @@ namespace _1.Scripts.DOTS.System
             normalActionDoneQuery= new EntityQueryBuilder(Allocator.Temp).WithDisabled<NormalActionDoneTag>().Build(ref state);
             priorityAttackDoneQuery= new EntityQueryBuilder(Allocator.Temp).WithDisabled<PriorityAttackDoneTag>().Build(ref state);
             reloadingDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<ReloadingDoneTag>().Build(ref state);
+            AttackDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<AttackDoneTag>().Build(ref state);
          
            
             NormalBehaviorTagQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag, AttackTag, MovingTag, LazyTag>().Build(ref state); //턴이 지났는지 확인하는 용도. 여기에 모든 행동 지시 태그를 넣어야 합니다. 그리고 행동 우선 순위가 지날 때마다 확인해주세요.
@@ -54,6 +57,7 @@ namespace _1.Scripts.DOTS.System
             MoveReset = state.GetComponentLookup<NormalActionDoneTag>();
             pAtkReset = state.GetComponentLookup<PriorityAttackDoneTag>();
             reloadingDoneReset = state.GetComponentLookup<ReloadingDoneTag>();
+            attackReset = state.GetComponentLookup<AttackDoneTag>();
         }
 
         [BurstCompile]
@@ -66,6 +70,7 @@ namespace _1.Scripts.DOTS.System
             MoveReset.Update(ref state);
             pAtkReset.Update(ref state);
             reloadingDoneReset.Update(ref state);
+            attackReset.Update(ref state);
            // seed = new Random((uint)(SystemAPI.Time.DeltaTime*1000));
             //spawnerEntity = state.EntityManager.CreateEntityQuery(new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>()).GetSingletonEntity();
 
@@ -87,8 +92,12 @@ namespace _1.Scripts.DOTS.System
             //     Debug.Log(unit.ValueRW.dice.NextInt(1, 6));
             // }
 
-            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty) //턴 종료 확인
+            Debug.Log("PMoveQuery : " + priorityMoveDoneQuery.IsEmpty);
+            Debug.Log("ReloadingQuery : " + reloadingDoneQuery.IsEmpty);
+            Debug.Log("AttackDoneQuery : " + AttackDoneQuery.IsEmpty); //AttackDone Flag가 정상적으로 세워지지 않아 태그 초기화가 이루어지지 않음
+            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty)// && AttackDoneQuery.IsEmpty) //턴 종료 확인
             {
+                Debug.Log("초기화 진행");
                 //유닛 몇개 있는지 확인, 유닛이 있다면 사기 체크, 체크 통과하면 초기화 , singleton 엔티티가 각 세력 병력 수 기록, 사기 체크가 필요한 세력이 누구누구인지 job에 전달함.
                 //job에서는 각 엔티티를 가져와서 엔티티의 세력 데이터를 사기 체크 필요한 세력 데이터와 비교 후 사기 체크 결정. 통과 시 태그 초기화(행동 완료 태그 비활성화).
                 EntityCommandBuffer ecb = new(Allocator.Temp);
@@ -109,6 +118,10 @@ namespace _1.Scripts.DOTS.System
                         if (reloadingDoneReset.HasComponent(entity))
                         {
                             reloadingDoneReset.SetComponentEnabled(entity, false);
+                        }
+                        if (attackReset.HasComponent(entity))
+                        {
+                            attackReset.SetComponentEnabled(entity, false);
                         }
                         if (MoveReset.HasComponent(entity))
                         {

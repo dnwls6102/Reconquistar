@@ -19,7 +19,8 @@ namespace _1.Scripts.DOTS.System.Jobs
         [ReadOnly] public MapMakerComponentData MapMaker; //RuleSystem에서 가져온 MapMaker
 
         // AttackTag가 활성화 되어있는(주: WithOptions로 Enabled여부를 파악하지 않고 있음) 유닛, Target엔티티 , Flip
-        public void Execute(in SampleUnitComponentData currentUnit, EnabledRefRW<AttackTag> attackTag, ref TargetEntityData target, ref Flip flipx)
+        // 목표를 찾지 못했을 경우 DoneTag의 Flag를 세우기
+        public void Execute(in SampleUnitComponentData currentUnit, EnabledRefRW<AttackTag> attackTag, EnabledRefRW<AttackDoneTag> doneTag, ref TargetEntityData target, ref Flip flipx)
         {
             bool found = false;
             int2 targetIndex = new(0, 0);
@@ -56,6 +57,10 @@ namespace _1.Scripts.DOTS.System.Jobs
                 {
                     attackTag.ValueRW = true;
                 }
+            }
+            else
+            {
+                doneTag.ValueRW = true;
             }
         }
     }
