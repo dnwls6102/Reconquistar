@@ -247,6 +247,7 @@ MonoBehaviour:
   sampleUnit: {fileID: 8475687399866159820, guid: d1e8228476a88ce40a58efc1ffbb5771, type: 3}
   samplePMoveUnit: {fileID: 8475687399866159820, guid: 15759b19641db334e86622331218efef, type: 3}
   SampleShootingUnit: {fileID: 8475687399866159820, guid: 297dd67368e953e47809ff5300f0bd92, type: 3}
+  DataEntity: {fileID: 839436132415700727, guid: f801a9990d5819b4a85910369ffed9ae, type: 3}
   number: 1400
   pMoveNum: 200
   ShootingUnitNum: 0

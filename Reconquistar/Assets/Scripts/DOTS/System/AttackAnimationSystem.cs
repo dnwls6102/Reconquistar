@@ -19,6 +19,7 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            state.RequireForUpdate<AttackTag>();
             delay = 0;
             var systemData = new SystemData();
             var queryBuilder = new EntityQueryBuilder(Allocator.Temp)
@@ -26,7 +27,7 @@ namespace _1.Scripts.DOTS.System
                 .WithAspect<AnimatorAspect>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState);
             var movableQuery = state.GetEntityQuery(queryBuilder);
-            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<MovingTag>());
+            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<AttackTag>());
             systemData.AttackQuery = movableQuery;
 
             _ = state.EntityManager.AddComponentData(state.SystemHandle, systemData);

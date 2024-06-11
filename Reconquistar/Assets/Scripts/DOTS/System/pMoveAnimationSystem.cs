@@ -17,6 +17,8 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            
+            state.RequireForUpdate<PriorityMovingTag>();
             var systemData = new SystemData();
             var queryBuilder = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<PriorityMovingTag>()
