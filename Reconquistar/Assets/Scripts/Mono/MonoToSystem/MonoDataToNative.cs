@@ -51,6 +51,7 @@ namespace Mono.MonoToSystem
             _entityManager.AddBuffer<SynergyListBuffer>(CardEntity);
             _entityManager.AddComponent<DeckHeader>(DeckEntity);
             _entityManager.AddComponent<CardHeader>(CardEntity);
+            _entityManager.SetComponentData(CardEntity,new CardHeader{cardNum = 9});
             DynamicBuffer<DeckListBuffer> TestDeckListBuffer =
                 _entityManager.GetBuffer<DeckListBuffer>(DeckManagerEntity);
             DynamicBuffer<CardListBuffer> TestBuffer = _entityManager.GetBuffer<CardListBuffer>(DeckEntity);

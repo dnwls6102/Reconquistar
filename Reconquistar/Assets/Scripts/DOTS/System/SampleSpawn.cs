@@ -5,6 +5,7 @@ using DOTS.Authoring_baker_;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using Unity.Entities.UniversalDelegates;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -14,7 +15,8 @@ namespace _1.Scripts.DOTS.System
 {
     public partial struct SampleSpawn : ISystem
     {
-        public static readonly NativeHashMap<int, unit> SpawnData = new NativeHashMap<int, unit>(50, Allocator.Temp)
+        //각 카드의 기초 데이터. 마지막 number에는 곱하기 10을 한 것이 실제 인원수. 
+        public static readonly NativeHashMap<int, unit> SpawnData = new NativeHashMap<int, unit>(50, Allocator.Temp) 
         {
             // 카스티야
             {1, new unit(10,2,1,3,2,1,14,1,6,false,false,false, 9)},
@@ -60,24 +62,34 @@ namespace _1.Scripts.DOTS.System
             {38, new unit(42,5,2,19,10,8,1,4,3,true,false,false,1.5)},
             {39, new unit(30,6,6,7,5,7,6,2,3,false,false,false,1)},
             {40, new unit(32,8,6,14,8,7,1,3,8,false,true,false,2.5)},
-            //용병국가
-            {41, new unit()},
-            {42, new unit()},
-            {43, new unit()},
-            {44, new unit()},
-            {45, new unit()},
-            {46, new unit()},
+            
+            //나바라, 최전방에 1카드 씩
+            {41, new unit(27,4,-4,17,7,4,1,1,20,true,false,false,1)},
+            {42, new unit(16,6,5,11,4,2,2,1,8,false,false,false,3)},
+            //아프리카, 최전방에 1카드 씩
+            {43, new unit(13,2,-1,6,3,3,7,3,6,false,false,false,1)},
+            {44, new unit(13,5,2,7,3,3,2,1,8,false,false,false,3)},
+            //마요르카, 최후방에 1카드 씩
+            {45, new unit(12,3,0,3,2,3,18,2,3,false,false,false,7)},
+            //갈리시아, 최전방에 1카드 씩
+            {46, new unit(17,6,0,15,5,3,1,1,10,false,false,false,4)},
+            
             {47, new unit()},
             {48, new unit()},
+            
             {49, new unit()},
             {50, new unit()},
             
         };
         
+        public NativeHashMap<int, int> test;
+        public NativeHashMap<int, NativeList<int>> test2;
+        
+        public NativeList<TestData2> newTestData;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
-            Debug.Log(string.Format("{0}",SpawnData[1].HasPatk));
+           // Debug.Log(string.Format("{0}",SpawnData[1].HasPatk));
             state.RequireForUpdate<SampleSpawnData>();
             state.RequireForUpdate<SamplePMoveSpawnData>();
             state.RequireForUpdate<MapTileAuthoringComponentData>();
@@ -95,10 +107,11 @@ namespace _1.Scripts.DOTS.System
             var Flags = SystemAPI.GetSingleton<DebugFlags>();
             var ecb = new EntityCommandBuffer(Allocator.Temp);
 
+
             int x = 0;
             int y = 0;
             int newteam = 0;
-            int n = 0;
+            //int n = 0;
             MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
             var tileQuery = SystemAPI.QueryBuilder().WithAll<MapTileAuthoringComponentData>().Build();
             NativeArray<MapTileAuthoringComponentData> tiles = tileQuery.ToComponentDataArray<MapTileAuthoringComponentData>(Allocator.Temp);
@@ -326,18 +339,40 @@ namespace _1.Scripts.DOTS.System
 
             var DeckManagerEntity = SystemAPI.GetSingletonEntity<DeckListBuffer>();
             DynamicBuffer<DeckListBuffer> TestDeckListBuffer = SystemAPI.GetBuffer<DeckListBuffer>(DeckManagerEntity);
-            var DeckEntity=TestDeckListBuffer[0].HashToDeckEntity;
-            DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity);
-            var CardEntity = CardListBuffer[0].HashToCardEntity;
-            DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity);
-            Debug.Log(string.Format("{0}",TestSynBuffer[0].SynNumber));
             
+            //var DeckEntity=TestDeckListBuffer[0].HashToDeckEntity;
+            //DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity);
+            //var CardEntity = CardListBuffer[0].HashToCardEntity;
+            //DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity);
+            newTestData = new NativeList<TestData2>(5,Allocator.Temp){
+                {new TestData2{HashToCard = new NativeHashMap<int, int>(30,Allocator.Temp){}, HashToSyn = new NativeHashMap<int, NativeList<int>>(10,Allocator.Temp){}}}
+            };
+            testFunction(newTestData, TestDeckListBuffer,ref state);
+            Debug.Log(string.Format("{0}",newTestData[0].HashToCard[1]));
         }
         [BurstCompile]
         public void OnDestroy(ref SystemState state)
         {
         }
 
+        public void testFunction (NativeList<TestData2> decklist, DynamicBuffer<DeckListBuffer> TestDeckListBuffer, ref SystemState system){
+            int decknumber = 0;
+            foreach(var DeckEntity in TestDeckListBuffer){
+                decklist.Add(new TestData2{});
+                DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity.HashToDeckEntity);
+                int cardnumber = 1;
+                foreach(var CardEntity in CardListBuffer){
+                    DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity.HashToCardEntity);
+                    decklist[decknumber].HashToCard.Add(cardnumber,SystemAPI.GetComponent<CardHeader>(CardEntity.HashToCardEntity).cardNum);
+                }
+            }
+            return;
+        }
+        
+        public struct TestData2 : IComponentData{
+            public NativeHashMap<int,int> HashToCard;
+            public NativeHashMap<int, NativeList<int>> HashToSyn;
+        }
 
     }
     
