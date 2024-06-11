@@ -17,13 +17,15 @@ namespace _1.Scripts.DOTS.System
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
+            
+            state.RequireForUpdate<PriorityMovingTag>();
             var systemData = new SystemData();
             var queryBuilder = new EntityQueryBuilder(Allocator.Temp)
                 .WithAll<PriorityMovingTag>()
                 .WithAspect<AnimatorAspect>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState);
             var movableQuery = state.GetEntityQuery(queryBuilder);
-            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<MovingTag>());
+            movableQuery.AddChangedVersionFilter(ComponentType.ReadOnly<PriorityMovingTag>());
             systemData.PMovableQuery = movableQuery;
 
             _ = state.EntityManager.AddComponentData(state.SystemHandle, systemData);

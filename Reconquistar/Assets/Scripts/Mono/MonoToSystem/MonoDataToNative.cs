@@ -27,7 +27,7 @@ namespace Mono.MonoToSystem
         private void Awake()
         {
             _entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
-            
+            Debug.Log("awake");
             SpawnEntity();
         }
 

@@ -85,7 +85,7 @@ namespace _1.Scripts.DOTS.System
         public NativeHashMap<int, int> test;
         public NativeHashMap<int, NativeList<int>> test2;
         
-        public NativeList<TestData2> DeckListData;
+        public NativeList<DeckData> DeckListData;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -344,8 +344,8 @@ namespace _1.Scripts.DOTS.System
             //DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity);
             //var CardEntity = CardListBuffer[0].HashToCardEntity;
             //DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity);
-            DeckListData = new NativeList<TestData2>(5,Allocator.Temp){
-                {new TestData2{HashToCard = new NativeHashMap<int, int>(30,Allocator.Temp){}, HashToSyn = new NativeHashMap<int, NativeList<int>>(10,Allocator.Temp){}}}
+            DeckListData = new NativeList<DeckData>(5,Allocator.Temp){
+                {new DeckData{HashToCard = new NativeHashMap<int, int>(20,Allocator.Temp){}, HashToSyn = new NativeHashMap<int, NativeList<int>>(20,Allocator.Temp){}}}
             };
             ReadDeckData(DeckListData, DeckListBuffer,ref state);
             Debug.Log(string.Format("{0}",DeckListData[0].HashToSyn[1][1]));
@@ -355,16 +355,16 @@ namespace _1.Scripts.DOTS.System
         {
         }
 
-        public void ReadDeckData (NativeList<TestData2> decklist, DynamicBuffer<DeckListBuffer> TestDeckListBuffer, ref SystemState system){
+        public void ReadDeckData (NativeList<DeckData> decklist, DynamicBuffer<DeckListBuffer> TestDeckListBuffer, ref SystemState system){
             int decknumber = 0;
             foreach(var DeckEntity in TestDeckListBuffer){
-                decklist.Add(new TestData2{});
+                decklist.Add(new DeckData{});
                 DynamicBuffer<CardListBuffer> CardListBuffer = SystemAPI.GetBuffer<CardListBuffer>(DeckEntity.HashToDeckEntity);
                 int cardnumber = 1;
                 foreach(var CardEntity in CardListBuffer){
                     DynamicBuffer<SynergyListBuffer> TestSynBuffer = SystemAPI.GetBuffer<SynergyListBuffer>(CardEntity.HashToCardEntity);
                     decklist[decknumber].HashToCard.Add(cardnumber,SystemAPI.GetComponent<CardHeader>(CardEntity.HashToCardEntity).cardNum);
-                    NativeList<int> temp = new NativeList<int>(10,Allocator.Persistent);
+                    NativeList<int> temp = new NativeList<int>(5,Allocator.Persistent);
                     foreach(var Synergy in TestSynBuffer){
                         temp.Add(Synergy.SynNumber);
                     }
@@ -376,7 +376,7 @@ namespace _1.Scripts.DOTS.System
             return;
         }
         
-        public struct TestData2 : IComponentData{
+        public struct DeckData : IComponentData{
             public NativeHashMap<int,int> HashToCard;
             public NativeHashMap<int, NativeList<int>> HashToSyn;
         }
