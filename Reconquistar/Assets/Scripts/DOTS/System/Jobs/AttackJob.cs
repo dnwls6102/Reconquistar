@@ -16,13 +16,15 @@ namespace _1.Scripts.DOTS.System.Jobs
     {
         [ReadOnly] public ComponentLookup<SampleUnitComponentData> SampleUnitComponents;
         public EntityCommandBuffer.ParallelWriter ecb;
-        public void Execute(RefRO<SampleUnitComponentData> unit, RefRW<TargetEntityData> target, EnabledRefRW<AttackDoneTag> doneTag, EnabledRefRW<AttackTag> attackTag)
+        public void Execute(RefRO<SampleUnitComponentData> unit, RefRW<TargetEntityData> target, EnabledRefRW<AttackTag> attackTag)
         {
             Debug.Log("공격Job");
             //Job에서 entity 접근을 통해 컴포넌트 데이터 조작을 하는 방법을 찾아야 함
             //GetComponentLookup으로 하기
             //SampleUnitComponents[target.ValueRW.targetEntity].hp = SampleUnitComponents[target.ValueRW.targetEntity].hp - unit.ValueRO.dmg;
             //ecb ParallelWriter로 하기
+            //WithEntityAccess로 entity에 대한 접근을 한 후 attackDoneTag를 활성화하는 방법(Execute로 entityAccess가 가능한지부터 확인)
+            //아니면 AttackDoneTag가 disabled된 유닛들을 긁어 모으는법도 방법
             //필요한 인수: sortkey, entity, Component
             ecb.SetComponent<SampleUnitComponentData>(1, target.ValueRW.targetEntity, new SampleUnitComponentData()
             {
@@ -36,7 +38,7 @@ namespace _1.Scripts.DOTS.System.Jobs
                 dice = SampleUnitComponents[target.ValueRO.targetEntity].dice
             });
             attackTag.ValueRW = false; //행동 Flag를 내리기
-            doneTag.ValueRW = true; //행동 완료 Flag를 올리기
+            //doneTag.ValueRW = true; //행동 완료 Flag를 올리기
         }
     }
 }

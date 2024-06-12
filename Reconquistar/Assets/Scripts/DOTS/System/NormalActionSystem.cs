@@ -74,21 +74,26 @@ namespace _1.Scripts.DOTS.System
                 }
                 //공격
                 //attackTag의 Flag는 어디서 세워지는 것인지? => FindNearestJob에서 세워짐
-                /*foreach (var (unit, target, doneTag, attackTag) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>, EnabledRefRW<AttackDoneTag>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>())
+                //현재 공격이 이루어지지 않는 이유 : 공격이 단 한번이라도 이루어지지 않는다면 AttackDoneTag는 언제나 비활성화된 상태이니, foreach로 잡히지 않는다. 
+                foreach (var (unit, target, attackTag, entity) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>().WithDisabled<AttackDoneTag>().WithEntityAccess())//, EnabledRefRW<AttackDoneTag>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>())
                 {
                     Debug.Log("공격");
                     SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
-                    attackTag.ValueRW = false;
-                    doneTag.ValueRW = true; //targetEntity가 없는 유닛들에 대해서 행동 완료 처리는?
-                }*/
+                    attackTag.ValueRW = false; //attackTag의 비활성화는 정상적으로 진행됨. 빨라서 안보이는거임
+                    SystemAPI.SetComponentEnabled<AttackDoneTag>(entity, true);
+                    //Debug.Log("attackTagValue : " + attackTag.ValueRW);
+                    //doneTag.ValueRW = true; //사거리 밖의 유닛들에 대해서 행동 완료 처리: FindNearestJob, FinrPriorityMoveJob에서 진행
+                }
 
-                AttackJob attackJob = new()
+                //Job 할당 자체가 안되는 문제
+                //같은 이유로 Job 할당은 되는데, 조건에 충족하는 유닛이 없으니 Execute가 실행되지 않는거임
+                /*AttackJob attackJob = new()
                 {
                     SampleUnitComponents = sampleUnitLookup,
                     ecb = ecb.AsParallelWriter(),
                 };
                 attackJob.ScheduleParallel();
-                state.Dependency.Complete();
+                state.Dependency.Complete();*/
 
                 //체력 0인 유닛 파괴
 

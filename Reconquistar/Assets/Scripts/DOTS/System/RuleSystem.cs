@@ -95,7 +95,7 @@ namespace _1.Scripts.DOTS.System
             Debug.Log("PMoveQuery : " + priorityMoveDoneQuery.IsEmpty);
             Debug.Log("ReloadingQuery : " + reloadingDoneQuery.IsEmpty);
             Debug.Log("AttackDoneQuery : " + AttackDoneQuery.IsEmpty); //AttackDone Flag가 정상적으로 세워지지 않아 태그 초기화가 이루어지지 않음
-            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty)// && AttackDoneQuery.IsEmpty) //턴 종료 확인
+            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty && AttackDoneQuery.IsEmpty) //턴 종료 확인
             {
                 Debug.Log("초기화 진행");
                 //유닛 몇개 있는지 확인, 유닛이 있다면 사기 체크, 체크 통과하면 초기화 , singleton 엔티티가 각 세력 병력 수 기록, 사기 체크가 필요한 세력이 누구누구인지 job에 전달함.
