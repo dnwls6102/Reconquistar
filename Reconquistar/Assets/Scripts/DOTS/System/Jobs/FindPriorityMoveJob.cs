@@ -61,10 +61,11 @@ namespace _1.Scripts.DOTS.System.Jobs
                 {
                     attackTag.ValueRW = true;
                 }
+                else
+                    doneTag.ValueRW = true;
             }
 
-            else
-                doneTag.ValueRW = true;
+            
         }
     }
 }
