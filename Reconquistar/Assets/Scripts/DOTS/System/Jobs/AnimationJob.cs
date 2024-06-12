@@ -7,6 +7,7 @@ using Unity.Entities;
 
 namespace _1.Scripts.DOTS.System.Jobs
 {
+    [BurstCompile]
     public partial struct AnimationJob : IJobEntity
     {
         public AnimationSettings AnimationSettings;

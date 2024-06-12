@@ -245,9 +245,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sampleUnit: {fileID: 8475687399866159820, guid: d1e8228476a88ce40a58efc1ffbb5771, type: 3}
+  samplePMoveUnit: {fileID: 8475687399866159820, guid: bc6012207b4bd9748a6c380ca403a89d, type: 3}
+  SampleShootingUnit: {fileID: 8475687399866159820, guid: 9ba83f697e72b6a488711df3c6d069d2, type: 3}
   number: 1400
+  pMoveNum: 0
+  ShootingUnitNum: 0
   ToggleValue: 0
   startFlag: 0
+  _debugSampleUnit: 0
+  _debugPMoveUnit: 0
+  _debugShootingUnit: 0
 --- !u!4 &2086172760
 Transform:
   m_ObjectHideFlags: 0

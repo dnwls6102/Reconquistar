@@ -3,6 +3,7 @@ using Unity.Entities;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using Unity.Mathematics;
+using Random = Unity.Mathematics.Random;
 
 public class SampleUnitAuthoring : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class SampleUnitAuthoring : MonoBehaviour
             AddComponent(entity, new AttackTag());
             AddComponent(entity, new LazyTag());
             AddComponent(entity, new TargetEntityData());
+            AddComponent(entity, new NormalActionDoneTag());
+            AddComponent(entity, new AttackDoneTag());
         }
     }
 }
@@ -38,6 +41,7 @@ public struct SampleUnitComponentData : IComponentData
     public int hp; 
     public int dmg;
     public int team;
+    public Random dice;
 }
 
 public struct TargetEntityData : IComponentData

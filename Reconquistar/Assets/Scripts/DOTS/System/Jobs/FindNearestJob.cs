@@ -19,7 +19,8 @@ namespace _1.Scripts.DOTS.System.Jobs
         [ReadOnly] public MapMakerComponentData MapMaker; //RuleSystem에서 가져온 MapMaker
 
         // AttackTag가 활성화 되어있는(주: WithOptions로 Enabled여부를 파악하지 않고 있음) 유닛, Target엔티티 , Flip
-        public void Execute(in SampleUnitComponentData currentUnit, EnabledRefRW<AttackTag> attackTag, ref TargetEntityData target, ref Flip flipx)
+        // 목표를 찾지 못했을 경우 DoneTag의 Flag를 세우기
+        public void Execute(in SampleUnitComponentData currentUnit, EnabledRefRW<AttackTag> attackTag, EnabledRefRW<AttackDoneTag> doneTag, ref TargetEntityData target, ref Flip flipx)
         {
             bool found = false;
             int2 targetIndex = new(0, 0);
@@ -32,7 +33,7 @@ namespace _1.Scripts.DOTS.System.Jobs
                 if (SampleUnitComponents[SampleUnits[i]].team != currentUnit.team) //전체 유닛들 중 i번째 인덱스를 가진 유닛의 팀과 현재 유닛의 팀이 다를경우
                 {
                     float newDist = math.distancesq(currentUnit.index, SampleUnitComponents[SampleUnits[i]].index); //해당 유닛과 현재 유닛의 거리 측정
-                    if (newDist < dist) // dist가 newDist보다 클 경우 (주: 처음 측정의 경우 반드시 작동하게 해야해서 math.INFINITY로 설정한 것)
+                    if (newDist < dist) // dist가 newDist보다 클 경우 (주: 현재는 디버깅을 위해 반드시 작동하게 해야해서 math.INFINITY로 설정한 것)
                     {
                         dist = newDist; // dist = newDist
                         targetIndex = SampleUnitComponents[SampleUnits[i]].index; // targetIndex를 해당 유닛의 index로 변경
@@ -56,6 +57,10 @@ namespace _1.Scripts.DOTS.System.Jobs
                 {
                     attackTag.ValueRW = true;
                 }
+            }
+            else
+            {
+                doneTag.ValueRW = true;
             }
         }
     }
