@@ -91,9 +91,9 @@ namespace _1.Scripts.DOTS.System
             //     Debug.Log(unit.ValueRW.dice.NextInt(1, 6));
             // }
 
-            Debug.Log("PMoveQuery : " + priorityMoveDoneQuery.IsEmpty);
-            Debug.Log("ReloadingQuery : " + reloadingDoneQuery.IsEmpty);
-            Debug.Log("AttackDoneQuery : " + AttackDoneQuery.IsEmpty); //AttackDone Flag가 정상적으로 세워지지 않아 태그 초기화가 이루어지지 않음
+            //Debug.Log("PMoveQuery : " + priorityMoveDoneQuery.IsEmpty);
+            //Debug.Log("ReloadingQuery : " + reloadingDoneQuery.IsEmpty);
+            //Debug.Log("AttackDoneQuery : " + AttackDoneQuery.IsEmpty); //AttackDone Flag가 정상적으로 세워지지 않아 태그 초기화가 이루어지지 않음
             if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty && AttackDoneQuery.IsEmpty && normalActionDoneQuery.IsEmpty) //턴 종료 확인
             {
                 Debug.Log("초기화 진행");
