@@ -151,7 +151,7 @@ sysinfo.txt
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
-
+/[Aa]ssets/[Ss]ceneDependencyCache/*
 ### VisualStudioCode ###
 .vscode/*
 !.vscode/settings.json
