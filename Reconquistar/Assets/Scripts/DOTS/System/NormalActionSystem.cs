@@ -109,7 +109,7 @@ namespace _1.Scripts.DOTS.System
                 ecb.Playback(state.EntityManager);
 
 
-                /*if (attackDoneQuery.IsEmpty)
+                if (attackDoneQuery.IsEmpty)
                 {
                     for (int i = 0; i < 2; i++)
                     {
@@ -166,7 +166,7 @@ namespace _1.Scripts.DOTS.System
                         MapMaker = mapMaker
                     }.ScheduleParallel();
                     state.Dependency.Complete();
-                }*/
+                }
 
             }
         }
