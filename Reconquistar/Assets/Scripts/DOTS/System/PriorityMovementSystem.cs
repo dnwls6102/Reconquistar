@@ -53,8 +53,8 @@ namespace _1.Scripts.DOTS.System
             //모든 유닛들의 행동 완료 태그 초기화 작업이 잘 이루어졌는가?
            if (priorityMoveDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
             {
-                Debug.Log("조건 통과");
-                Debug.Log("" + priorityMovingTagQuery.IsEmpty);
+ //               Debug.Log("조건 통과");
+//                Debug.Log("" + priorityMovingTagQuery.IsEmpty);
                 if(!priorityMovingTagQuery.IsEmpty)
                 {
                     Debug.Log("자유 이동 분기 작동");

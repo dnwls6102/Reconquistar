@@ -57,12 +57,6 @@ namespace _1.Scripts.DOTS.System.Jobs
                     flipx.Value = new int2(-1, 0); // flipx 취소
                 }
                 //찾은 타겟이 범위 안에 있을 시 Attack Tag 활성화
-                if (math.abs(currentUnit.index.x - targetIndex.x) + math.abs(currentUnit.index.y - targetIndex.y) <= 1)
-                {
-                    attackTag.ValueRW = true;
-                }
-                else
-                    doneTag.ValueRW = true;
             }
 
             

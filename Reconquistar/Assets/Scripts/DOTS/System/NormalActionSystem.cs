@@ -18,8 +18,12 @@ namespace _1.Scripts.DOTS.System
         EntityQuery spawnerQuery;
         EntityQuery unitQuery;
         EntityQuery tileQuery;
+        EntityQuery priorityAttackDoneWithAnyQuery;
+        EntityQuery normalActionDoneWithAnyQuery;
         ComponentLookup<SampleUnitComponentData> sampleUnitLookup;
-        void OnCreate(ref SystemState state)
+        
+        [BurstCompile]
+        public void OnCreate(ref SystemState state)
         {
             state.RequireForUpdate<MapMakerComponentData>();
             state.RequireForUpdate<SampleSpawnData>();
@@ -30,10 +34,13 @@ namespace _1.Scripts.DOTS.System
             spawnerQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<StartPause>().Build(ref state);
             unitQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<SampleUnitComponentData>().Build(ref state);
             tileQuery = new EntityQueryBuilder(Allocator.Temp).WithAll<MapTileAuthoringComponentData>().Build(ref state);
+            priorityAttackDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityAttackDoneTag>().Build(ref state);
+            normalActionDoneWithAnyQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<NormalActionDoneTag>().Build(ref state);
             sampleUnitLookup = state.GetComponentLookup<SampleUnitComponentData>(true);
         }
 
-        void OnUpdate(ref SystemState state)
+        [BurstCompile]
+        public void OnUpdate(ref SystemState state)
         {
             sampleUnitLookup.Update(ref state);
             if (spawnerQuery.CalculateEntityCount() == 0)
@@ -41,7 +48,7 @@ namespace _1.Scripts.DOTS.System
                 return;
             }
 
-            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty)
+            if (priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty &&  normalActionDoneWithAnyQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty)
             {
                 Debug.Log("일반 행동 시작");
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
@@ -77,10 +84,10 @@ namespace _1.Scripts.DOTS.System
                 //현재 공격이 이루어지지 않는 이유 : 공격이 단 한번이라도 이루어지지 않는다면 AttackDoneTag는 언제나 비활성화된 상태이니, foreach로 잡히지 않는다. 
                 foreach (var (unit, target, attackTag, entity) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>().WithDisabled<AttackDoneTag>().WithEntityAccess())//, EnabledRefRW<AttackDoneTag>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>())
                 {
-                    Debug.Log("공격");
+                    //Debug.Log("공격");
                     SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
-                    attackTag.ValueRW = false; //attackTag의 비활성화는 정상적으로 진행됨. 빨라서 안보이는거임
-                    SystemAPI.SetComponentEnabled<AttackDoneTag>(entity, true);
+                    //attackTag.ValueRW = false; //attackTag의 비활성화는 정상적으로 진행됨. 빨라서 안보이는거임
+                    //SystemAPI.SetComponentEnabled<AttackDoneTag>(entity, true);
                     //Debug.Log("attackTagValue : " + attackTag.ValueRW);
                     //doneTag.ValueRW = true; //사거리 밖의 유닛들에 대해서 행동 완료 처리: FindNearestJob, FinrPriorityMoveJob에서 진행
                 }
@@ -109,7 +116,7 @@ namespace _1.Scripts.DOTS.System
                 ecb.Playback(state.EntityManager);
 
 
-                if (attackDoneQuery.IsEmpty)
+                //if (attackDoneQuery.IsEmpty)
                 {
                     for (int i = 0; i < 2; i++)
                     {
@@ -160,12 +167,6 @@ namespace _1.Scripts.DOTS.System
 
                     tiles.Dispose();
 
-                    new MovementJob
-                    {
-                        Time = (float)SystemAPI.Time.DeltaTime,
-                        MapMaker = mapMaker
-                    }.ScheduleParallel();
-                    state.Dependency.Complete();
                 }
 
             }

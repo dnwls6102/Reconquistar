@@ -14,7 +14,7 @@ namespace _1.Scripts.DOTS.System.Jobs
         
         public void Execute(AnimatorAspect animator, EnabledRefRO<PriorityMovingTag> movingTagEnabled)
         {
-            animator.SetAnimation(movingTagEnabled.ValueRO ? AnimationSettings.WalkHash : AnimationSettings.IdleHash, Time);
+            animator.SetAnimation( AnimationSettings.WalkHash, Time);
         } 
     }
 }

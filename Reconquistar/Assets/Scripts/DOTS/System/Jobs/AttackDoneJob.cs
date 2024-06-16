@@ -13,11 +13,16 @@ namespace _1.Scripts.DOTS.System.Jobs
         public AnimationSettings AnimationSettings;
         public double Time;
         public void Execute(AnimatorAspect animator, EnabledRefRW<AttackTag> attackTagEnabled,
-            EnabledRefRW<NormalActionDoneTag> normalActionDonTag)
+            EnabledRefRW<NormalActionDoneTag> normalActionDonTag, EnabledRefRW<AttackDoneTag> attackDoneTag)
         {
-            animator.SetAnimation(AnimationSettings.IdleHash, Time);
+            if(attackTagEnabled.ValueRO == false)
+            {
+                return;
+            }
             attackTagEnabled.ValueRW = false;
+            attackDoneTag.ValueRW = true;
             normalActionDonTag.ValueRW = true;
+            animator.SetAnimation(AnimationSettings.IdleHash, Time);
         }
     }
 }

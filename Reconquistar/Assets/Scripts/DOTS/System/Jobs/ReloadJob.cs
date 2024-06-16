@@ -11,13 +11,14 @@ namespace _1.Scripts.DOTS.System.Jobs
     [WithOptions(EntityQueryOptions.IgnoreComponentEnabledState)]
     public partial struct ReloadJob : IJobEntity
     {
-        public void Execute(ref ShootTag cUnit, EnabledRefRW<ReloadingDoneTag> doneTag)
+        public void Execute(ref ShootTag cUnit, EnabledRefRW<ReloadingDoneTag> doneTag,EnabledRefRW<NormalActionDoneTag> normaldonTag)
         {
             if (cUnit.bullets == 0 || cUnit.bullets < 0) //현재 원거리 공격 유닛의 총알 갯수가 0개 이하일 경우
             {
-                Debug.Log("Reloading");
+                //Debug.Log("Reloading");
                 cUnit.bullets = cUnit.Maxbullets;
                 doneTag.ValueRW = true;
+                normaldonTag.ValueRW = true;
             }
         }
     }

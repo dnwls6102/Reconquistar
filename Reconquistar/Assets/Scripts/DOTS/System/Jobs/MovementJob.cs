@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Authoring_baker_;
 using Unity.Collections;
+using Unity.VisualScripting;
 
 //using UnityEngine;
 //using System.Diagnostics;
@@ -22,6 +23,10 @@ namespace _1.Scripts.DOTS.System.Jobs
         // excute 쿼리에 moving tag 추가 예정
         public void Execute(ref LocalTransform transform, EnabledRefRW<MovingTag> movingTag, EnabledRefRW<NormalActionDoneTag> normalActionDoneTag, ref SampleUnitComponentData sampleUnitComponentData)
         {
+            if (movingTag.ValueRW == false)
+            {
+                return;
+            }
             // MovingTag를 달고 있는 Unit의 transform이 Unit의 목표지점(destIndex)와 같을 경우?
             if (math.all(transform.Position == Int2tofloat3(sampleUnitComponentData.destIndex)))
             {
@@ -36,6 +41,9 @@ namespace _1.Scripts.DOTS.System.Jobs
                 //Debug.Log("Moving entity" + sampleUnitComponentData.index);
                 // moving tag 취소
             }
+
+
+                
         }
 
         //MoveTowards의 Unity.Mathematic버전
