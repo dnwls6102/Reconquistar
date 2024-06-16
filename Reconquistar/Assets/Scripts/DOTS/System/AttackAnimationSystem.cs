@@ -23,7 +23,7 @@ namespace _1.Scripts.DOTS.System
             delay = 0;
             var systemData = new SystemData();
             var queryBuilder = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<AttackTag>()
+                .WithAll<AttackTag,AttackDoneJob,NormalActionDoneTag>()
                 .WithAspect<AnimatorAspect>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState);
             var movableQuery = state.GetEntityQuery(queryBuilder);
@@ -50,7 +50,7 @@ namespace _1.Scripts.DOTS.System
             var animationSwitchJob = new AttackAnimationJob()
             {
                 AnimationSettings = animationSettings,
-                Time = time
+                Time = SystemAPI.Time.ElapsedTime
             };
             state.Dependency = animationSwitchJob.ScheduleParallelByRef(systemData.AttackQuery, state.Dependency);
             delay += SystemAPI.Time.DeltaTime;
@@ -60,7 +60,7 @@ namespace _1.Scripts.DOTS.System
                 var animationDonJob = new AttackDoneJob()
                 {
                     AnimationSettings = animationSettings,
-                    Time = time
+                    Time = SystemAPI.Time.ElapsedTime
                 };
                 state.Dependency = animationDonJob.ScheduleParallelByRef(systemData.AttackQuery, state.Dependency);
             }
