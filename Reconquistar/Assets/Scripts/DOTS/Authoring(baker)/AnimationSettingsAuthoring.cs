@@ -13,7 +13,7 @@ namespace _1.Scripts.DOTS.Authoring_baker_
                 AddComponent(GetEntity(TransformUsageFlags.None), new AnimationSettings
                 {
                     IdleHash = Animator.StringToHash("idle"),
-                    WalkHash = Animator.StringToHash("walk"),
+                    WalkHash = Animator.StringToHash("move"),
                     AttackHash = Animator.StringToHash("attack")
                 });
             }

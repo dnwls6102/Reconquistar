@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: SampleUnitAnimationSet
   m_EditorClassIdentifier: 
   _animations:
-  - name: attack
-    data: {fileID: 11400000, guid: f4d2ab93c4a45f14d97cda4aabae8bd7, type: 2}
   - name: idle
     data: {fileID: 11400000, guid: 3bee128e132ccd648ad127db799d7b19, type: 2}
-  - name: walk
+  - name: move
     data: {fileID: 11400000, guid: d182f919edf83724ca329b6f2a7358e6, type: 2}
+  - name: attack
+    data: {fileID: 11400000, guid: f4d2ab93c4a45f14d97cda4aabae8bd7, type: 2}

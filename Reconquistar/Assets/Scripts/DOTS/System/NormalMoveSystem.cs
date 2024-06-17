@@ -8,10 +8,12 @@ using Unity.Mathematics;
 
 namespace _1.Scripts.DOTS.System
 {
+    [UpdateAfter(typeof(NormalActionSystem))]
     public partial struct NormalMoveSystem : ISystem
     {
         
         EntityQuery priorityMoveDoneQuery;
+        EntityQuery MovementQuery;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
         {
@@ -20,12 +22,13 @@ namespace _1.Scripts.DOTS.System
             state.RequireForUpdate<SampleUnitComponentData>();
             state.RequireForUpdate<MovingTag>();
             priorityMoveDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<PriorityMoveDoneTag>().Build(ref state);
+            MovementQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
-            if (priorityMoveDoneQuery.IsEmpty)
+            if (!MovementQuery.IsEmpty)
             {
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
                 new MovementJob

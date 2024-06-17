@@ -108,8 +108,6 @@ namespace _1.Scripts.DOTS.System
                         if (pMoveReset.HasComponent(entity))
                         {
                             pMoveReset.SetComponentEnabled(entity,false);
-                        }else{
-       //                     Debug.Log("1");
                         }
                         if (reloadingDoneReset.HasComponent(entity))
                         {
@@ -121,9 +119,7 @@ namespace _1.Scripts.DOTS.System
                         }
                         if (normalActionReset.HasComponent(entity))
                         {
-              //              Debug.Log("33");
                             normalActionReset.SetComponentEnabled(entity,false);
-                        }else{
                         }
                         if (pAtkReset.HasComponent(entity))
                         {

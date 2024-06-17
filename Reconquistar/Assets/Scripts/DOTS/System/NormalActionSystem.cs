@@ -10,6 +10,7 @@ using Unity.Transforms;
 
 namespace _1.Scripts.DOTS.System
 {
+    [UpdateAfter(typeof(ReloadSystem))]
     public partial struct NormalActionSystem : ISystem
     {
         EntityQuery priorityMoveDoneQuery;
@@ -57,7 +58,7 @@ namespace _1.Scripts.DOTS.System
                 NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
                 if (normalActionDoneWithAnyQuery.IsEmpty) //일반 행동을 수행한 유닛이 한명도 없다면? : 이번 턴 처음으로 일반 행동 시작
                 {
-                    Debug.Log("일반 행동 시작");
+                    //Debug.Log("일반 행동 시작");
                     
                     FindNearestJob findNearestJob = new()
                     {
@@ -159,13 +160,13 @@ namespace _1.Scripts.DOTS.System
 
                     }
 
-                }else if (attackDoneQuery.IsEmpty && !normalActionDoneQuery.IsEmpty)
+                }else if (attackDoneQuery.IsEmpty && !normalActionDoneQuery.IsEmpty)//공격 단계가 끝났지만, 일반 행동이 끝나진 않음
                 {
                     for (int i = 0; i < 2; i++)
                         {
                             //AttackTag가 비활성화되고 MovingTag가 비활성화된 유닛들
                             foreach (var (unit, target, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>, RefRO<TargetEntityData>>()
-                                         .WithDisabled<AttackTag>().WithDisabled<MovingTag>().WithDisabled<NormalActionDoneTag>().WithEntityAccess())
+                                         .WithDisabled<MovingTag>().WithDisabled<NormalActionDoneTag>().WithEntityAccess())
                             {
 
                                 if (!state.EntityManager.Exists(target.ValueRO.targetEntity) //이 유닛의 target 엔티티가 없는 경우

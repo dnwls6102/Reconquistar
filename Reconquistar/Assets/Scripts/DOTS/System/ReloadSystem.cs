@@ -7,7 +7,9 @@ using UnityEngine;
 using Unity.Mathematics;
 using Unity.Transforms;
 using _1.Scripts.DOTS.Components___Tags;
+using _1.Scripts.DOTS.System;
 
+[UpdateAfter(typeof(PriorityMovementSystem))]
 public partial struct ReloadSystem : ISystem
 {
     EntityQuery spawnerQuery;

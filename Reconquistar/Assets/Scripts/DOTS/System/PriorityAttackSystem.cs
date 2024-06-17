@@ -8,6 +8,7 @@ using Unity.Collections;
 
 namespace _1.Scripts.DOTS.System
 {
+    [UpdateAfter(typeof(NormalMoveSystem))]
     public partial struct PriorityAttackSystem : ISystem
     {
         
