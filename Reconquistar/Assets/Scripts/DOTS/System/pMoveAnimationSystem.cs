@@ -10,6 +10,7 @@ namespace _1.Scripts.DOTS.System
     [UpdateBefore(typeof(SpriteUVAnimationSystem))]
     public partial struct pMoveAnimationSystem : ISystem
     {
+        EntityQuery PMovementquery;
         private struct SystemData : IComponentData
         {
             public EntityQuery PMovableQuery;
@@ -31,11 +32,16 @@ namespace _1.Scripts.DOTS.System
             _ = state.EntityManager.AddComponentData(state.SystemHandle, systemData);
 
             queryBuilder.Dispose();
+            PMovementquery = new EntityQueryBuilder(Allocator.Temp).WithAny<PriorityMovingTag>().Build(ref state);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            if (PMovementquery.IsEmpty)
+            {
+                return;
+            }
             var systemData = SystemAPI.GetComponent<SystemData>(state.SystemHandle);
             if (!SystemAPI.TryGetSingleton<AnimationSettings>(out var animationSettings))
                 return;

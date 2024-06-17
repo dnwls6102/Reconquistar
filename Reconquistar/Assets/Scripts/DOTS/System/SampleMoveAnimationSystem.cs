@@ -11,6 +11,7 @@ namespace _1.Scripts.DOTS.System
     [UpdateBefore(typeof(SpriteUVAnimationSystem))]
     public partial struct SampleMoveAnimationSystem : ISystem
     {
+        EntityQuery Movementquery;
         private struct SystemData : IComponentData
         {
             public EntityQuery MovableQuery;
@@ -33,11 +34,16 @@ namespace _1.Scripts.DOTS.System
             _ = state.EntityManager.AddComponentData(state.SystemHandle, systemData);
 
             queryBuilder.Dispose();
+            Movementquery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
         }
 
         [BurstCompile]
         public void OnUpdate(ref SystemState state)
         {
+            if (Movementquery.IsEmpty)
+            {
+                return;
+            }
             var systemData = SystemAPI.GetComponent<SystemData>(state.SystemHandle);
             if (!SystemAPI.TryGetSingleton<AnimationSettings>(out var animationSettings))
                 return;

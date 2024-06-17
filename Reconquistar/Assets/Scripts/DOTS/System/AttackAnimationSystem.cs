@@ -4,6 +4,8 @@ using NSprites;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
+using UnityEngine;
+
 namespace _1.Scripts.DOTS.System
 {
     [BurstCompile]
@@ -23,7 +25,7 @@ namespace _1.Scripts.DOTS.System
             delay = 0;
             var systemData = new SystemData();
             var queryBuilder = new EntityQueryBuilder(Allocator.Temp)
-                .WithAll<AttackTag,AttackDoneJob,NormalActionDoneTag>()
+                .WithAll<AttackTag,AttackDoneTag,NormalActionDoneTag>()
                 .WithAspect<AnimatorAspect>()
                 .WithOptions(EntityQueryOptions.IgnoreComponentEnabledState);
             var movableQuery = state.GetEntityQuery(queryBuilder);

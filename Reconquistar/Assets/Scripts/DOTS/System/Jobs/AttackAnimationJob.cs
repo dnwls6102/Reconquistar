@@ -14,6 +14,7 @@ namespace _1.Scripts.DOTS.System.Jobs
         public double Time;
         public void Execute(AnimatorAspect animator, EnabledRefRW<AttackTag> attackTagEnabled)
         {
+            if(attackTagEnabled.ValueRO == true)
             animator.SetAnimation(AnimationSettings.AttackHash, Time);
         } 
     }

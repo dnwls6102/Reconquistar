@@ -55,7 +55,11 @@ namespace _1.Scripts.DOTS.System.Jobs
                 //찾은 타겟이 범위 안에 있을 시 Attack Tag 활성화
                 if (math.abs(currentUnit.index.x - targetIndex.x) + math.abs(currentUnit.index.y - targetIndex.y) <= 1)
                 {
-                    attackTag.ValueRW = true;
+                  //  Debug.Log("done");
+                  if (attackTag.ValueRW == false)
+                  {
+                      attackTag.ValueRW = true;
+                  }
                 }
                 else
                 {
