@@ -254,7 +254,7 @@ MonoBehaviour:
   startFlag: 0
   _debugSampleUnit: 0
   _debugPMoveUnit: 0
-  _debugShootingUnit: 0
+  _debugShootingUnit: 1
 --- !u!4 &2086172760
 Transform:
   m_ObjectHideFlags: 0

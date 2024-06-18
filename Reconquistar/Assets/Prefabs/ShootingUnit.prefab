@@ -90,4 +90,5 @@ MonoBehaviour:
   dmg: 0
   bullet: 0
   maxNum: 0
+  range: 3
   bulletEntity: {fileID: 6586778698883999347, guid: 66df484608a146e48ad54cdf90e536e2, type: 3}

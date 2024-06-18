@@ -11,6 +11,7 @@ public class SampleShootingUnitAuthoring : MonoBehaviour
     public int dmg;
     public int bullet;
     public int maxNum; //최대 총알 갯수
+    public int range;
     public GameObject bulletEntity;
     public class SampleShootingUnitAuthoringBaker : Baker<SampleShootingUnitAuthoring>
     {
@@ -23,6 +24,7 @@ public class SampleShootingUnitAuthoring : MonoBehaviour
                 hp = authoring.hp,
                 dmg = authoring.dmg,
                 team = 0,
+                range = authoring.range,
             });
             AddComponent(entity, new ShootTag
             {

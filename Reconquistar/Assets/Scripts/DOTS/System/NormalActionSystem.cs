@@ -7,6 +7,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Mathematics;
 using Unity.Transforms;
+using _1.Scrpits.DOTS.Authoring_baker_;
 
 namespace _1.Scripts.DOTS.System
 {
@@ -73,18 +74,25 @@ namespace _1.Scripts.DOTS.System
                     sampleUnits.Dispose();
 
 
-                    //총알 생성
-                    foreach (var (bullet, transform, unitEntity) in SystemAPI.Query<RefRO<ShootTag>, RefRW<LocalTransform>>().WithAll<AttackTag>().WithEntityAccess())
+                    //총알 생성(AttackTag가 세워진 원거리 유닛들에 대해서만)
+                    foreach (var (bullet, unitEntity) in SystemAPI.Query<RefRO<ShootTag>>().WithAll<AttackTag>().WithEntityAccess())
                     {
                         var temp = state.EntityManager.Instantiate(bullet.ValueRO.BulletEntity); //query로 받아온 ShootTag 컴포넌트의 bulletEntity 생성
+                        var targetLocation = state.EntityManager.GetComponentData<LocalTransform>(state.EntityManager.GetComponentData<TargetEntityData>(unitEntity).targetEntity);
                         state.EntityManager.SetComponentData(temp, new LocalTransform()
                         {
                             Position = SystemAPI.GetComponent<LocalTransform>(unitEntity).Position,
+                            //Position = MovementJob.MoveTowards(SystemAPI.GetComponent<LocalTransform>(unitEntity).Position, targetLocation.Position, SystemAPI.GetComponent<Bullet>(temp).velocity * Time.deltaTime),
                             Rotation = quaternion.identity,
                             Scale = SystemAPI.GetComponent<LocalTransform>(unitEntity).Scale,
-                        }); //총알 엔티티의 transform을 원거리 유닛의 transform으로 설정
-
+                        }) ; //총알 엔티티의 transform을 원거리 유닛의 transform으로 설정
+                        //생성된 총알 엔티티를 targetEntity의 위치까지 MoveForward로 이동시키기(실제 데미지 계산은 아래 foreach 구문에서 진행)
+                        var bulletLocation = state.EntityManager.GetComponentData<LocalTransform>(temp);
+                        bulletLocation.Position = MovementJob.MoveTowards(bulletLocation.Position, targetLocation.Position, SystemAPI.GetComponent<Bullet>(temp).velocity * Time.deltaTime);
                     }
+                    
+
+
                     //공격
                     //attackTag의 Flag는 어디서 세워지는 것인지? => FindNearestJob에서 세워짐
                     
@@ -99,6 +107,9 @@ namespace _1.Scripts.DOTS.System
                             //Debug.Log("Delete");
                         }
                     }
+
+                    
+
                     ecb.Playback(state.EntityManager);
 
 

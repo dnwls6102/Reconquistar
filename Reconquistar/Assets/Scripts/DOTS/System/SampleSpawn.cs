@@ -153,7 +153,8 @@ namespace _1.Scripts.DOTS.System
                         hp = 3,
                         movementspeed = 1f,
                         dmg = 0,
-                        team = newteam
+                        team = newteam,
+                        range = 1,
                     });
                     ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
@@ -191,7 +192,8 @@ namespace _1.Scripts.DOTS.System
                         hp = 1,
                         movementspeed = 1f,
                         dmg = 1,
-                        team = newteam
+                        team = newteam,
+                        range = 3,
                     });
                     ecb.SetComponentEnabled<MovingTag>(SampleSUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleSUnit, false);
@@ -234,7 +236,8 @@ namespace _1.Scripts.DOTS.System
                         hp = 3,
                         movementspeed = 1f,
                         dmg = 1,
-                        team = newteam
+                        team = newteam,
+                        range = 1,
                     });
                     ecb.SetComponentEnabled<MovingTag>(SampleUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleUnit, false);
@@ -292,8 +295,9 @@ namespace _1.Scripts.DOTS.System
                         index = new int2(x, y),
                         hp = 3,
                         movementspeed = 1f,
-                        dmg = 1,
-                        team = newteam
+                        dmg = 0,
+                        team = newteam,
+                        range = 1,
                     });
                     ecb.SetComponentEnabled<PriorityMovingTag>(PMoveUnit, false);
                     ecb.SetComponentEnabled<MovingTag>(PMoveUnit, false);
