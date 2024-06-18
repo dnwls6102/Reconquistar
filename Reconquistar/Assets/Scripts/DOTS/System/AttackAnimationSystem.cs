@@ -55,9 +55,16 @@ namespace _1.Scripts.DOTS.System
                 Time = SystemAPI.Time.ElapsedTime
             };
             state.Dependency = animationSwitchJob.ScheduleParallelByRef(systemData.AttackQuery, state.Dependency);
+            state.Dependency.Complete();
             delay += SystemAPI.Time.DeltaTime;
             if (delay > 1)
             {
+                foreach (var (unit, target, attackTag, entity) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>().WithDisabled<AttackDoneTag>().WithEntityAccess())//, EnabledRefRW<AttackDoneTag>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>())
+                {
+                    //Debug.Log("공격");
+                    SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
+                    //한번만 하게 수정 필요. normalactiondonetag를 여기에 넣는 것을 권장
+                }
                 delay = 0;
                 var animationDonJob = new AttackDoneJob()
                 {

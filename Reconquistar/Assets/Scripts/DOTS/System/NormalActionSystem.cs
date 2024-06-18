@@ -56,6 +56,8 @@ namespace _1.Scripts.DOTS.System
                 NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
                 NativeArray<int2> moves = new(2, Allocator.TempJob);
                 NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
+                EntityCommandBuffer ecb = new(Allocator.TempJob);
+                
                 if (normalActionDoneWithAnyQuery.IsEmpty) //일반 행동을 수행한 유닛이 한명도 없다면? : 이번 턴 처음으로 일반 행동 시작
                 {
                     //Debug.Log("일반 행동 시작");
@@ -70,7 +72,6 @@ namespace _1.Scripts.DOTS.System
                     state.Dependency.Complete();
                     sampleUnits.Dispose();
 
-                    EntityCommandBuffer ecb = new(Allocator.TempJob);
 
                     //총알 생성
                     foreach (var (bullet, transform, unitEntity) in SystemAPI.Query<RefRO<ShootTag>, RefRW<LocalTransform>>().WithAll<AttackTag>().WithEntityAccess())
@@ -86,12 +87,7 @@ namespace _1.Scripts.DOTS.System
                     }
                     //공격
                     //attackTag의 Flag는 어디서 세워지는 것인지? => FindNearestJob에서 세워짐
-                    foreach (var (unit, target, attackTag, entity) in SystemAPI.Query<RefRO<SampleUnitComponentData>, RefRW<TargetEntityData>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>().WithDisabled<AttackDoneTag>().WithEntityAccess())//, EnabledRefRW<AttackDoneTag>, EnabledRefRW<AttackTag>>().WithAll<AttackTag>())
-                    {
-                        //Debug.Log("공격");
-                        SystemAPI.GetComponentRW<SampleUnitComponentData>(target.ValueRW.targetEntity).ValueRW.hp -= unit.ValueRO.dmg;
-                        //한번만 하게 수정 필요. normalactiondonetag를 여기에 넣는 것을 권장
-                    }
+                    
 
 
                     foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
@@ -100,7 +96,7 @@ namespace _1.Scripts.DOTS.System
                         {
                             SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
                             ecb.DestroyEntity(entity);
-                            Debug.Log("Delete");
+                            //Debug.Log("Delete");
                         }
                     }
                     ecb.Playback(state.EntityManager);
@@ -162,6 +158,19 @@ namespace _1.Scripts.DOTS.System
 
                 }else if (attackDoneQuery.IsEmpty && !normalActionDoneQuery.IsEmpty)//공격 단계가 끝났지만, 일반 행동이 끝나진 않음
                 {
+                    
+                    foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
+                    {
+                        if (unit.ValueRW.hp <= 0)
+                        {
+                            SystemAPI.GetComponentRW<MapTileAuthoringComponentData>(tiles[unit.ValueRO.index.x + unit.ValueRO.index.y * mapMaker.number]).ValueRW.soldier = 0;
+                            ecb.DestroyEntity(entity);
+                            Debug.Log("Delete");
+                        }
+                    }
+                    ecb.Playback(state.EntityManager);
+
+                    
                     for (int i = 0; i < 2; i++)
                         {
                             //AttackTag가 비활성화되고 MovingTag가 비활성화된 유닛들
@@ -211,6 +220,9 @@ namespace _1.Scripts.DOTS.System
                         }
 
                         tiles.Dispose();
+                        ecb.Dispose();
+                        moves.Dispose();
+                        sampleUnits.Dispose();
                 }
             }
         }

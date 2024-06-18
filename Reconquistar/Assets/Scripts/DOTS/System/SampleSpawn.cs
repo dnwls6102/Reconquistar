@@ -292,7 +292,7 @@ namespace _1.Scripts.DOTS.System
                         index = new int2(x, y),
                         hp = 3,
                         movementspeed = 1f,
-                        dmg = 0,
+                        dmg = 1,
                         team = newteam
                     });
                     ecb.SetComponentEnabled<PriorityMovingTag>(PMoveUnit, false);
