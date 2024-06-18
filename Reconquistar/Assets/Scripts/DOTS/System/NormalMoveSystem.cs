@@ -12,7 +12,7 @@ namespace _1.Scripts.DOTS.System
     public partial struct NormalMoveSystem : ISystem
     {
         
-        EntityQuery priorityMoveDoneQuery;
+        //EntityQuery priorityMoveDoneQuery;
         EntityQuery MovementQuery;
         [BurstCompile]
         public void OnCreate(ref SystemState state)
@@ -21,7 +21,7 @@ namespace _1.Scripts.DOTS.System
             state.RequireForUpdate<SampleSpawnData>();
             state.RequireForUpdate<SampleUnitComponentData>();
             state.RequireForUpdate<MovingTag>();
-            priorityMoveDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<PriorityMoveDoneTag>().Build(ref state);
+            //priorityMoveDoneQuery = new EntityQueryBuilder(Allocator.Temp).WithDisabled<PriorityMoveDoneTag>().Build(ref state);
             MovementQuery = new EntityQueryBuilder(Allocator.Temp).WithAny<MovingTag>().Build(ref state);
         }
 

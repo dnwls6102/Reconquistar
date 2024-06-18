@@ -353,6 +353,7 @@ namespace _1.Scripts.DOTS.System
             };
             ReadDeckData(DeckListData, DeckListBuffer,ref state);
             Debug.Log(string.Format("{0}",DeckListData[0].HashToSyn[1][1]));
+            DeckListData.Dispose();
         }
         [BurstCompile]
         public void OnDestroy(ref SystemState state)

@@ -60,11 +60,12 @@ namespace _1.Scripts.DOTS.System
             if (priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
             {
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
-                NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
-                NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
-                NativeArray<int2> moves = new(2, Allocator.Temp);
                 if (priorityMoveDoneWithAnyQuery.IsEmpty) //자유이동을 마친 유닛이 없을 때
                 {
+                    
+                    NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
+                    NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
+                    NativeArray<int2> moves = new(2, Allocator.Temp);
                     //               Debug.Log("조건 통과");
 //                Debug.Log("" + priorityMovingTagQuery.IsEmpty);
                    // if(!priorityMovingTagQuery.IsEmpty) //자유 이동 유닛이 있을 때
@@ -129,6 +130,8 @@ namespace _1.Scripts.DOTS.System
                         }
                     }
                     tiles.Dispose();
+                    sampleUnits.Dispose();
+                    moves.Dispose();
                     new PriorityMovementJob()
                     {
                         Time = (float)SystemAPI.Time.DeltaTime,

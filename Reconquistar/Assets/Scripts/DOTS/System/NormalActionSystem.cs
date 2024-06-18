@@ -71,7 +71,6 @@ namespace _1.Scripts.DOTS.System
                     };
                     findNearestJob.ScheduleParallel();
                     state.Dependency.Complete();
-                    sampleUnits.Dispose();
 
 
                     //총알 생성(AttackTag가 세워진 원거리 유닛들에 대해서만)
@@ -91,13 +90,6 @@ namespace _1.Scripts.DOTS.System
                         bulletLocation.Position = MovementJob.MoveTowards(bulletLocation.Position, targetLocation.Position, SystemAPI.GetComponent<Bullet>(temp).velocity * Time.deltaTime);
                     }
                     
-
-
-                    //공격
-                    //attackTag의 Flag는 어디서 세워지는 것인지? => FindNearestJob에서 세워짐
-                    
-
-
                     foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                     {
                         if (unit.ValueRW.hp <= 0)
@@ -107,11 +99,7 @@ namespace _1.Scripts.DOTS.System
                             //Debug.Log("Delete");
                         }
                     }
-
-                    
-
                     ecb.Playback(state.EntityManager);
-
 
                     if (attackDoneQuery.IsEmpty)
                     {
@@ -163,11 +151,10 @@ namespace _1.Scripts.DOTS.System
                             }
                         }
 
-                        tiles.Dispose();
-
                     }
 
-                }else if (attackDoneQuery.IsEmpty && !normalActionDoneQuery.IsEmpty)//공격 단계가 끝났지만, 일반 행동이 끝나진 않음
+                }
+                else if (attackDoneQuery.IsEmpty && !normalActionDoneQuery.IsEmpty)//공격 단계가 끝났지만, 일반 행동이 끝나진 않음
                 {
                     
                     foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
@@ -221,20 +208,16 @@ namespace _1.Scripts.DOTS.System
 
                                     }
                                 }
-
-
-
                                 if (i == 0 && !SystemAPI.IsComponentEnabled<MovingTag>(entity)) // 첫 번째 루프를 도는 중 MovingTag가 붙여지지 않은 entity의 경우 LazyTag 붙이기
                                     SystemAPI.SetComponentEnabled<LazyTag>(entity, true);
                                 else SystemAPI.SetComponentEnabled<LazyTag>(entity, false); // 그 외의 경우 LazyTag 비활성화
                             }
                         }
-
-                        tiles.Dispose();
-                        ecb.Dispose();
-                        moves.Dispose();
-                        sampleUnits.Dispose();
                 }
+                ecb.Dispose();
+                tiles.Dispose();
+                moves.Dispose();
+                sampleUnits.Dispose();
             }
         }
     }

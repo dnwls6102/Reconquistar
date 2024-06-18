@@ -82,9 +82,9 @@ namespace _1.Scripts.DOTS.System
                 return;
             }
 
-            MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
+            //MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
 
-            NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
+            //NativeArray<Entity> tiles = tileQuery.ToEntityArray(Allocator.TempJob);
             //난수 생성 확인기
             // foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
             // {
@@ -96,10 +96,10 @@ namespace _1.Scripts.DOTS.System
             //Debug.Log("AttackDoneQuery : " + AttackDoneQuery.IsEmpty); //AttackDone Flag가 정상적으로 세워지지 않아 태그 초기화가 이루어지지 않음
             if (priorityMoveDoneQuery.IsEmpty && normalActionDoneQuery.IsEmpty && priorityAttackDoneQuery.IsEmpty) //턴 종료 확인
             {
-                Debug.Log("초기화 진행");
+                //Debug.Log("초기화 진행");
                 //유닛 몇개 있는지 확인, 유닛이 있다면 사기 체크, 체크 통과하면 초기화 , singleton 엔티티가 각 세력 병력 수 기록, 사기 체크가 필요한 세력이 누구누구인지 job에 전달함.
                 //job에서는 각 엔티티를 가져와서 엔티티의 세력 데이터를 사기 체크 필요한 세력 데이터와 비교 후 사기 체크 결정. 통과 시 태그 초기화(행동 완료 태그 비활성화).
-                EntityCommandBuffer ecb = new(Allocator.Temp);
+                //EntityCommandBuffer ecb = new(Allocator.Temp);
                 //체력 0인 유닛 파괴
                 
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
@@ -127,8 +127,8 @@ namespace _1.Scripts.DOTS.System
                         }
                     
                 }
-                ecb.Playback(state.EntityManager);
-                tiles.Dispose();
+                //ecb.Playback(state.EntityManager);
+                //tiles.Dispose();
                 
             }
             
