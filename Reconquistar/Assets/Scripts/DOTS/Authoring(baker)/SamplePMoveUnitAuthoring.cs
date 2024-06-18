@@ -9,6 +9,7 @@ public class SamplePMoveUnitAuthoring : MonoBehaviour
     public float movementspeed;
     public int hp;
     public int dmg;
+    public int range;
     public class SamplePMoveUnitAuthoringBaker : Baker<SamplePMoveUnitAuthoring>
     {
         public override void Bake(SamplePMoveUnitAuthoring authoring)
@@ -20,6 +21,7 @@ public class SamplePMoveUnitAuthoring : MonoBehaviour
                 hp = authoring.hp,
                 dmg = authoring.dmg,
                 team = 0,
+                range = authoring.range,
             });
             AddComponent(entity, new PriorityMovingTag());
             AddComponent(entity, new MovingTag());

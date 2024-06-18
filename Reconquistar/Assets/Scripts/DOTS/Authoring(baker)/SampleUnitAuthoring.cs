@@ -11,6 +11,7 @@ public class SampleUnitAuthoring : MonoBehaviour
     public float movementspeed;
     public int hp;
     public int dmg;
+    public int range;
     public class SampleUnitAuthoringBaker : Baker<SampleUnitAuthoring>
     {
         public override void Bake(SampleUnitAuthoring authoring)
@@ -21,6 +22,7 @@ public class SampleUnitAuthoring : MonoBehaviour
                 hp = authoring.hp, 
                 dmg = authoring.dmg,
                 team = 0,
+                range = authoring.range,
                 });
             AddComponent(entity,new MovingTag());
             AddComponent(entity, new AttackTag());
@@ -42,6 +44,7 @@ public struct SampleUnitComponentData : IComponentData
     public int dmg;
     public int team;
     public Random dice;
+    public int range;
 }
 
 public struct TargetEntityData : IComponentData

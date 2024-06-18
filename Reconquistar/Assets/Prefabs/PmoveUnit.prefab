@@ -88,3 +88,4 @@ MonoBehaviour:
   movementspeed: 0
   hp: 0
   dmg: 0
+  range: 1
