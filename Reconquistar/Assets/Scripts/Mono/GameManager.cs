@@ -12,12 +12,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject SelectionPanel;
     private Button[] SelectionPanelButtons;
 
-    private int playerNum = 1;
+    private int playerNum = 4;
     public static int currentPlayerNum;
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지
     public static int isMoving; // 0: 이동 전 / 1: 이동 중 / 2: 이동 후
     private bool isComplete; // 턴 종료 가능한지
+    public static bool isSelected; // 모집할 때, 버릴 카드 선택했는지
 
     public static Player[] players;
     public static Player currentPlayer => players[currentPlayerNum];
@@ -54,6 +55,7 @@ public class GameManager : MonoBehaviour
         isRolled = false;
         isMoving = 0;
         isComplete = false;
+        isSelected = false;
 
         SortPlayerTurnOrder();
     }
@@ -212,10 +214,18 @@ public class GameManager : MonoBehaviour
     }
 
     // 징집/모집 버튼 클릭 시 작동
-    public void DraftArmy(int type)
+    public void Jingjip()
     {
-        players[currentPlayerNum].AddCard(type);
+        players[currentPlayerNum].AddCard(type: 1);
         SelectionPanel.SetActive(false);
         isComplete = true;
     }
+
+    public void Mojip()
+    {   
+        SelectionPanel.SetActive(false);
+        StartCoroutine(currentPlayer.SelectDeleteCard());
+        isComplete = true;
+    }
+
 }

@@ -47,10 +47,14 @@ public class layoutgroupcontroller : MonoBehaviour
             card.GetComponent<CardDrag>().Initialize(i);
             card.GetComponent<Image>().color = cardInfos[i].CardColor;
 
+            // 모집 중 삭제할 카드 선택 가능하도록
+            card.GetComponent<Button>().interactable = cardInfos[i].CheckDeletion();
+
             int cardType = cardInfos[i].CardType;
             if (cardType == 0) cardType = 1;
             else if (cardType == 1) cardType = 2;
             card.GetComponent<RectTransform>().sizeDelta = new Vector2(cardType * 10 * 2.4f, 100);
+            
             card.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = cardInfos[i].CardType.ToString();
         }
     }

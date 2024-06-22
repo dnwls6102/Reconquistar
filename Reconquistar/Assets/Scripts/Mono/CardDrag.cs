@@ -56,4 +56,10 @@ public class CardDrag : MonoBehaviour
         layoutgroupcontroller.Instance.InsertCard(canvas.transform.TransformPoint(position));
         Destroy(gameObject);
     }
+
+    public void RemoveCard()
+    {
+        GameManager.currentPlayer.RemoveCard(index);
+        GameManager.isSelected = true;
+    }
 }

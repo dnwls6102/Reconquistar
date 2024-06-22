@@ -764,8 +764,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 185959264}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: DraftArmy
-        m_Mode: 3
+        m_MethodName: Jingjip
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -897,8 +897,8 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 185959264}
         m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: DraftArmy
-        m_Mode: 3
+        m_MethodName: Mojip
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

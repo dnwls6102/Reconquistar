@@ -5,12 +5,13 @@ using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public struct CardInfo
+public class CardInfo
 {
     public int KingdomType;
     public int CardType;
     // public List<Buff> BuffList;
     public Color CardColor;
+    private bool deleteCandidate;
 
     public CardInfo(int kingdomType, int cardType)
     {
@@ -18,6 +19,9 @@ public struct CardInfo
         CardType = cardType;
         CardColor = Color.white;
     }
+
+    public void SetDeletion(bool f) { deleteCandidate = f; }
+    public bool CheckDeletion() { return deleteCandidate; }
 }
 
 public class Player : MonoBehaviour
@@ -107,13 +111,6 @@ public class Player : MonoBehaviour
             int idx = Random.Range(0, c1.Count);
             card = c1[idx];
             c1.RemoveAt(idx);
-
-            String s = "";
-            foreach(CardInfo c in c1)
-            {
-                s += c.CardType + ", ";
-            }
-            Debug.Log(s);
         }
         else // 모집
         {
@@ -139,7 +136,6 @@ public class Player : MonoBehaviour
             }
             else // 상대 땅인 경우 - 무장병만
             {
-                // 징집병 버리는 거 추가
                 Debug.Log("상대방 무장병 뽑기");
 
                 int idx = Random.Range(0, c2.Count);
@@ -152,6 +148,15 @@ public class Player : MonoBehaviour
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
         layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
+    }
+
+    // 모집할 때 징병 카드 삭제
+    public void RemoveCard(int index)
+    {
+        CardInfo removedCard = cardList[index];
+        cardList.RemoveAt(index);
+        layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
+        GameManager.cardPool1[currentTileInfo.GetMapTile().Owner].Add(removedCard);
     }
 
     // 해당 나라 징집병 카드 가지고 있는지 확인
@@ -171,5 +176,26 @@ public class Player : MonoBehaviour
     {
         if (kingdomType == currentTileInfo.GetMapTile().Owner) return true;
         return false;
+    }
+    public IEnumerator SelectDeleteCard()
+    {
+        int kingdomType = currentTileInfo.GetMapTile().Owner;
+        if (this.kingdomType != kingdomType)
+        {
+            for (int i = 0; i < cardList.Count; i++)
+            {
+                if (cardList[i].KingdomType == kingdomType && cardList[i].CardType >= 6)
+                    cardList[i].SetDeletion(true);
+            }
+            layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
+
+            yield return new WaitUntil(() => GameManager.isSelected);
+            GameManager.isSelected = false;
+
+            for (int i = 0; i < cardList.Count; i++) { cardList[i].SetDeletion(false); }
+            layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
+        }
+
+        AddCard(2);
     }
 }
