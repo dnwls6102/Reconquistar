@@ -26,6 +26,7 @@ public class GameBoard : MonoBehaviour
         private MapTile mapTile;
         public TileInfo leftTileInfo { get; set; }
         public TileInfo rightTileInfo { get; set; }
+        public Color tileColor;
 
         public TileInfo(int index, Vector3 cellAxis, MapTile mapTile, TileInfo rightTileInfo)
         {
@@ -86,7 +87,6 @@ public class GameBoard : MonoBehaviour
 
                 tile = Instantiate(tileObject, loc, Quaternion.identity);
                 mapTile = tile.GetComponent<MapTile>();
-                mapTile.ChangeOwner(i);
 
                 if (idx == 0)
                     tileInfos[idx] = new TileInfo(idx, loc, mapTile);
@@ -95,6 +95,9 @@ public class GameBoard : MonoBehaviour
                     tileInfos[idx] = new TileInfo(idx, loc, mapTile, tileInfos[idx - 1]);
                     tileInfos[idx - 1].leftTileInfo = tileInfos[idx];
                 }
+
+                // 타일 색깔 입히기
+                tileInfos[idx].tileColor = mapTile.ChangeOwner(i);
             }
         }
         tileInfos[0].rightTileInfo = tileInfos[tilePerLine * 4 - 1];

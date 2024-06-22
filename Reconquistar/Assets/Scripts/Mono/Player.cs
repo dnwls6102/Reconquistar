@@ -10,11 +10,19 @@ public struct CardInfo
     public int CardType;
     // public List<Buff> BuffList;
     public Color CardColor;
+
+    public CardInfo(int kingdomType, int cardType)
+    {
+        KingdomType = kingdomType;
+        CardType = cardType;
+        CardColor = Color.white;
+    }
 }
 
 public class Player : MonoBehaviour
 {
     private int boardLength;
+    private int kingdomType;
     private GameBoard.TileInfo currentTileInfo;
     private SpriteRenderer sr;
     private GameObject arrow;
@@ -32,9 +40,10 @@ public class Player : MonoBehaviour
         deckcontroller = layoutgroupcontroller.Instance;
     }
 
-    public void SetCellIndex(int index)
+    public void Initialize(int kingdomType, int cellIndex)
     {
-        currentTileInfo = GameBoard.tileInfos[index];
+        this.kingdomType = kingdomType;
+        currentTileInfo = GameBoard.tileInfos[cellIndex];
         transform.position = currentTileInfo.GetCellAxis();
     }
 
@@ -80,16 +89,65 @@ public class Player : MonoBehaviour
         arrow.SetActive(display);
     }
 
+    public int GetCurrentTileOwner()
+    {
+        return currentTileInfo.GetMapTile().Owner;
+    }
+
     public void AddCard(int type)
     {
-        CardInfo card = new CardInfo();
-        card.KingdomType = currentTileInfo.GetMapTile().Owner;
+        CardInfo card;
+        int kingdomType = currentTileInfo.GetMapTile().Owner;
 
-        if (type == 1) card.CardType = Random.Range(6, 10);
-        else if (type == 2) card.CardType = Random.Range(3, 6);
-        else card.CardType = Random.Range(10, 13);
+        if (type == 1) // 징집
+        {
+            Debug.Log("징집병 뽑기");
+            List<CardInfo> c1 = GameManager.cardPool1[kingdomType];
+            int idx = Random.Range(0, c1.Count);
+            card = c1[idx];
+            c1.RemoveAt(idx);
 
-        card.CardColor = Random.ColorHSV();
+            String s = "";
+            foreach(CardInfo c in c1)
+            {
+                s += c.CardType + ", ";
+            }
+            Debug.Log(s);
+        }
+        else // 모집
+        {
+            List<CardInfo> c2 = GameManager.cardPool2[kingdomType];
+
+            if (kingdomType == this.kingdomType) // 본인 땅인 경우
+            {
+                if (Random.Range(0, 4) == 3) // 1/4 확률로 귀족풀 선택 (임시)
+                {
+                    Debug.Log("귀족 뽑기");
+                    List<CardInfo> c3 = GameManager.cardPool3[kingdomType];
+                    int idx = Random.Range(0, c3.Count);
+                    card = c3[idx];
+                    c3.RemoveAt(idx);
+                }
+                else // 무장병
+                {
+                    Debug.Log("본인 무장병 뽑기");
+                    int idx = Random.Range(0, c2.Count);
+                    card = c2[idx];
+                    c2.RemoveAt(idx);
+                }
+            }
+            else // 상대 땅인 경우 - 무장병만
+            {
+                // 징집병 버리는 거 추가
+                Debug.Log("상대방 무장병 뽑기");
+
+                int idx = Random.Range(0, c2.Count);
+                card = c2[idx];
+                c2.RemoveAt(idx);
+            }
+        }
+
+        card.CardColor = currentTileInfo.tileColor;
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
         layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);

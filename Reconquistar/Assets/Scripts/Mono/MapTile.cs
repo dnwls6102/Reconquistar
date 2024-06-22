@@ -16,7 +16,7 @@ public class MapTile : MonoBehaviour
         owner = -1;
     }
 
-    public void ChangeOwner(int attacker)
+    public Color ChangeOwner(int attacker)
     {
         if (owner != -1)
         {
@@ -24,6 +24,7 @@ public class MapTile : MonoBehaviour
         }
         owner = attacker;
         sr.color = regionColor[owner];
+        return regionColor[owner];
     }
 
     public bool CompareOwner(int player)

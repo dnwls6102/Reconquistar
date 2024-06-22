@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.Entities;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -45,6 +46,7 @@ public class layoutgroupcontroller : MonoBehaviour
             card.transform.SetParent(transform);
             card.GetComponent<CardDrag>().Initialize(i);
             card.GetComponent<Image>().color = cardInfos[i].CardColor;
+            card.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = cardInfos[i].CardType.ToString();
         }
     }
 

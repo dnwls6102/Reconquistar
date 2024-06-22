@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
+    private Button[] SelectionPanelButtons;
 
     private int playerNum = 4;
     public static int currentPlayerNum;
@@ -23,6 +24,13 @@ public class GameManager : MonoBehaviour
     private Dictionary<int, int> tilePerPlayer; // player 소유한 타일 수
     private List<int> playerTurnOrder = new List<int>();
 
+    // 1번풀 : 6~9 (공용)
+    // 2번풀 : 전문군인 3~5 (공용)
+    // 3번풀 : 귀족 카드 J, Q, K (고유)
+    public static List<List<CardInfo>> cardPool1 = new List<List<CardInfo>>();
+    public static List<List<CardInfo>> cardPool2 = new List<List<CardInfo>>();
+    public static List<List<CardInfo>> cardPool3 = new List<List<CardInfo>>();
+
     public static GameManager Instance;
     private void Awake()
     {
@@ -35,6 +43,9 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        InitializeCardPool();
+        SelectionPanelButtons = SelectionPanel.GetComponentsInChildren<Button>();
     }
 
     private void Start()
@@ -57,9 +68,42 @@ public class GameManager : MonoBehaviour
         {
             GameObject playerObject = Instantiate(PlayerPrefab);
             Player player = playerObject.GetComponent<Player>();
-            player.SetCellIndex(i * GameBoard.tilePerLine);
+            player.Initialize(kingdomType: i, cellIndex: i * GameBoard.tilePerLine);
             players[i] = player;
             tilePerPlayer.Add(i, GameBoard.tilePerLine);
+        }
+    }
+
+    private void InitializeCardPool()
+    {
+        for (int i = 0; i < 4; i++)
+        {
+            List<CardInfo> c = new List<CardInfo>();
+            for (int j = 6; j < 10; j++)
+            {
+                c.Add(new CardInfo(i, j));
+            }
+            cardPool1.Add(c);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            List<CardInfo> c = new List<CardInfo>();
+            for (int j = 3; j < 6; j++)
+            {
+                c.Add(new CardInfo(i, j));
+            }
+            cardPool2.Add(c);
+        }
+
+        for (int i = 0; i < 4; i++)
+        {
+            List<CardInfo> c = new List<CardInfo>();
+            for (int j = 0; j < 3; j++)
+            {
+                c.Add(new CardInfo(i, j));
+            }
+            cardPool3.Add(c);
         }
     }
 
@@ -108,6 +152,9 @@ public class GameManager : MonoBehaviour
 
         isMoving = 2;
 
+        int kingdomType = players[currentPlayerNum].GetCurrentTileOwner();
+        if (cardPool1[kingdomType].Count == 0) SelectionPanelButtons[0].interactable = false;
+        else SelectionPanelButtons[0].interactable = true;
         SelectionPanel.SetActive(true);
     }
 
@@ -146,7 +193,8 @@ public class GameManager : MonoBehaviour
         if (win)
         {
             int currentOwner = currentMapTile.Owner;
-            currentMapTile.ChangeOwner(currentPlayerNum);
+            GameBoard.tileInfos[currentCellIndex].tileColor =
+                currentMapTile.ChangeOwner(currentPlayerNum);
 
             tilePerPlayer[currentOwner]--;
             tilePerPlayer[currentPlayerNum]++;
