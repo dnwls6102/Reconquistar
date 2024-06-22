@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,9 +10,10 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
+    [SerializeField] private TextMeshProUGUI EventTimer;
     private Button[] SelectionPanelButtons;
 
-    private int playerNum = 4;
+    private int playerNum = 3;
     public static int currentPlayerNum;
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지
@@ -31,6 +32,9 @@ public class GameManager : MonoBehaviour
     public static List<List<CardInfo>> cardPool1 = new List<List<CardInfo>>();
     public static List<List<CardInfo>> cardPool2 = new List<List<CardInfo>>();
     public static List<List<CardInfo>> cardPool3 = new List<List<CardInfo>>();
+
+    public static int eventType = 0;
+    public static int roundUntilEventOccur = 0;
 
     public static GameManager Instance;
     private void Awake()
@@ -117,7 +121,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // 라운드 시작 전 플레이어 순서 정렬
+    // 라운드 시작 전 플레이어 순서 정렬 + 이벤트 남은 라운드 조정
     private void SortPlayerTurnOrder()
     {
         tilePerPlayer = tilePerPlayer.OrderBy(item => item.Value).ThenBy(x => x.Key).ToDictionary(x => x.Key, x => x.Value);
@@ -127,11 +131,22 @@ public class GameManager : MonoBehaviour
         {
             playerTurnOrder.Add(player.Key);
         }
-        Debug.Log("라운드 순서: " + String.Join(", ", playerTurnOrder));
+        Debug.Log("라운드 순서: " + string.Join(", ", playerTurnOrder));
 
         currentPlayerNum = playerTurnOrder[0];
         players[currentPlayerNum].SetArrow(true);
         currentTurn = 0;
+
+        if (EventTimer.text == "이벤트 발동")
+        {
+            NewEvent();
+        }
+        else
+        {
+            roundUntilEventOccur--;
+            if (roundUntilEventOccur <= 0) EventTimer.text = "이벤트 발동";
+            else EventTimer.text = "이벤트 " + eventType + " 발동까지 " + roundUntilEventOccur + " 라운드 남음";
+        }
     }
 
     // 이동 버튼 클릭
@@ -147,7 +162,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(PlayerTurn(clockwise));
     }
 
-    // 이동 -> 다음 플레이어 턴
+    // 이동 -> 다음 플레이어 턴 / selection panel 선택지 조건 확인
     private IEnumerator PlayerTurn(bool clockwise)
     {
         yield return StartCoroutine(players[currentPlayerNum].PlayerMove(Dice.finalDiceValue, clockwise));
@@ -160,6 +175,9 @@ public class GameManager : MonoBehaviour
 
         if (players[currentPlayerNum].CheckMojip()) SelectionPanelButtons[1].interactable = true;
         else SelectionPanelButtons[1].interactable = false;
+
+        if (roundUntilEventOccur > 0) SelectionPanelButtons[2].interactable = true;
+        else SelectionPanelButtons[2].interactable = false;
 
         if (players[currentPlayerNum].CheckJeomryeong()) SelectionPanelButtons[3].interactable = false;
         else SelectionPanelButtons[3].interactable = true;
@@ -213,7 +231,7 @@ public class GameManager : MonoBehaviour
         isComplete = true;
     }
 
-    // 징집/모집 버튼 클릭 시 작동
+    // 징집 버튼 클릭 시 작동
     public void Jingjip()
     {
         players[currentPlayerNum].AddCard(type: 1);
@@ -221,11 +239,29 @@ public class GameManager : MonoBehaviour
         isComplete = true;
     }
 
+    // 모집 버튼 클릭 시 작동
     public void Mojip()
-    {   
+    {
         SelectionPanel.SetActive(false);
         StartCoroutine(currentPlayer.SelectDeleteCard());
         isComplete = true;
     }
 
+    // 랜덤 이벤트 생성
+    private void NewEvent()
+    {
+        eventType = Random.Range(1, 5);
+        roundUntilEventOccur = Random.Range(10, 20);
+        EventTimer.text = "이벤트 " + eventType + " 발동까지 " + roundUntilEventOccur + " 라운드 남음";
+    }
+
+    // 기도 버튼 클릭 시 작동
+    public void Pray()
+    {
+        SelectionPanel.SetActive(false);
+        isComplete = true;
+        roundUntilEventOccur--;
+        if (roundUntilEventOccur <= 0) EventTimer.text = "이벤트 발동";
+        else EventTimer.text = "이벤트 " + eventType + " 발동까지 " + roundUntilEventOccur + " 라운드 남음";
+    }
 }
