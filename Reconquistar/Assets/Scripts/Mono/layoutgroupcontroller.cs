@@ -46,6 +46,11 @@ public class layoutgroupcontroller : MonoBehaviour
             card.transform.SetParent(transform);
             card.GetComponent<CardDrag>().Initialize(i);
             card.GetComponent<Image>().color = cardInfos[i].CardColor;
+
+            int cardType = cardInfos[i].CardType;
+            if (cardType == 0) cardType = 1;
+            else if (cardType == 1) cardType = 2;
+            card.GetComponent<RectTransform>().sizeDelta = new Vector2(cardType * 10 * 2.4f, 100);
             card.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = cardInfos[i].CardType.ToString();
         }
     }

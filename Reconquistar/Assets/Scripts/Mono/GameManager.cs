@@ -12,7 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject SelectionPanel;
     private Button[] SelectionPanelButtons;
 
-    private int playerNum = 4;
+    private int playerNum = 1;
     public static int currentPlayerNum;
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지
