@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -151,5 +152,24 @@ public class Player : MonoBehaviour
         Debug.Log(card.KingdomType + "의 " + card.CardType + " 카드를 뽑았습니다.");
         cardList.Add(card);
         layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
+    }
+
+    // 해당 나라 징집병 카드 가지고 있는지 확인
+    public bool CheckMojip()
+    {
+        int kingdomType = currentTileInfo.GetMapTile().Owner;
+        if (this.kingdomType == kingdomType) return true;
+
+        foreach (CardInfo c in cardList)
+        {
+            if (c.KingdomType == kingdomType && c.CardType >= 6) return true;
+        }
+        return false;
+    }
+
+    public bool CheckJeomryeong()
+    {
+        if (kingdomType == currentTileInfo.GetMapTile().Owner) return true;
+        return false;
     }
 }

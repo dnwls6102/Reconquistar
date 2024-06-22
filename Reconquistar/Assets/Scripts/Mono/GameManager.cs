@@ -155,6 +155,13 @@ public class GameManager : MonoBehaviour
         int kingdomType = players[currentPlayerNum].GetCurrentTileOwner();
         if (cardPool1[kingdomType].Count == 0) SelectionPanelButtons[0].interactable = false;
         else SelectionPanelButtons[0].interactable = true;
+
+        if (players[currentPlayerNum].CheckMojip()) SelectionPanelButtons[1].interactable = true;
+        else SelectionPanelButtons[1].interactable = false;
+
+        if (players[currentPlayerNum].CheckJeomryeong()) SelectionPanelButtons[3].interactable = false;
+        else SelectionPanelButtons[3].interactable = true;
+
         SelectionPanel.SetActive(true);
     }
 
