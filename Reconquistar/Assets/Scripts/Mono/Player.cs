@@ -5,25 +5,6 @@ using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class CardInfo
-{
-    public int KingdomType;
-    public int CardType;
-    // public List<Buff> BuffList;
-    public Color CardColor;
-    private bool deleteCandidate;
-
-    public CardInfo(int kingdomType, int cardType)
-    {
-        KingdomType = kingdomType;
-        CardType = cardType;
-        CardColor = Color.white;
-    }
-
-    public void SetDeletion(bool f) { deleteCandidate = f; }
-    public bool CheckDeletion() { return deleteCandidate; }
-}
-
 public class Player : MonoBehaviour
 {
     private int boardLength;
@@ -185,14 +166,14 @@ public class Player : MonoBehaviour
             for (int i = 0; i < cardList.Count; i++)
             {
                 if (cardList[i].KingdomType == kingdomType && cardList[i].CardType >= 6)
-                    cardList[i].SetDeletion(true);
+                    cardList[i].DeleteCandidate = true;
             }
             layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
 
             yield return new WaitUntil(() => GameManager.isSelected);
             GameManager.isSelected = false;
 
-            for (int i = 0; i < cardList.Count; i++) { cardList[i].SetDeletion(false); }
+            for (int i = 0; i < cardList.Count; i++) { cardList[i].DeleteCandidate = false; }
             layoutgroupcontroller.Instance.RefreshLayoutGroup(cardList);
         }
 

@@ -5,6 +5,7 @@ using UnityEngine.EventSystems;
 
 public class CardDrag : MonoBehaviour
 {
+    [SerializeField] private GameObject Line;
     private Canvas canvas;
     private float startY;
     private int index;
@@ -39,6 +40,7 @@ public class CardDrag : MonoBehaviour
         );
 
         transform.position = canvas.transform.TransformPoint(position) + Vector3.left * 10;
+        layoutgroupcontroller.Instance.InsertLine(transform.position);
     }
 
     public void DragEnd(BaseEventData data)

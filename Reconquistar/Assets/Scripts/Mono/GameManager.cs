@@ -6,6 +6,35 @@ using Unity.Entities.UniversalDelegates;
 using UnityEngine;
 using UnityEngine.UI;
 
+public class CardInfo
+{
+    public int KingdomType;
+    public int CardType;
+    // public List<Buff> BuffList;
+    public Color CardColor;
+    private bool deleteCandidate;
+    public bool DeleteCandidate
+    {
+        get { return deleteCandidate; }
+        set { deleteCandidate = value; }
+    }
+
+    private bool showLine;
+
+    public bool ShowLine
+    {
+        get { return showLine; }
+        set { showLine = value; }
+    }
+
+    public CardInfo(int kingdomType, int cardType)
+    {
+        KingdomType = kingdomType;
+        CardType = cardType;
+        CardColor = Color.white;
+    }
+}
+
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private GameObject PlayerPrefab;
@@ -13,7 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI EventTimer;
     private Button[] SelectionPanelButtons;
 
-    private int playerNum = 3;
+    private int playerNum = 4;
     public static int currentPlayerNum;
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지

@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class layoutgroupcontroller : MonoBehaviour
 {
     public HorizontalLayoutGroup LayoutGroup;
+    public int cardWidthPerPopulation;
 
     public GameObject cardPrefab;
     // Start is called before the first frame update
@@ -26,6 +27,8 @@ public class layoutgroupcontroller : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        cardWidthPerPopulation = Screen.width / 80;
+        Debug.Log(cardWidthPerPopulation);
     }
 
     public void RefreshLayoutGroup(List<CardInfo> cardInfos)
@@ -48,14 +51,19 @@ public class layoutgroupcontroller : MonoBehaviour
             card.GetComponent<Image>().color = cardInfos[i].CardColor;
 
             // 모집 중 삭제할 카드 선택 가능하도록
-            card.GetComponent<Button>().interactable = cardInfos[i].CheckDeletion();
+            card.GetComponent<Button>().interactable = cardInfos[i].DeleteCandidate;
 
+            // card width
             int cardType = cardInfos[i].CardType;
             if (cardType == 0) cardType = 1;
             else if (cardType == 1) cardType = 2;
-            card.GetComponent<RectTransform>().sizeDelta = new Vector2(cardType * 10 * 2.4f, 100);
+            card.GetComponent<RectTransform>().sizeDelta = new Vector2(cardType * cardWidthPerPopulation, 100);
             
+            // card number
             card.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>().text = cardInfos[i].CardType.ToString();
+
+            // card line
+            card.transform.GetChild(1).gameObject.SetActive(cardInfos[i].ShowLine);
         }
     }
 
@@ -68,27 +76,51 @@ public class layoutgroupcontroller : MonoBehaviour
     public void InsertCard(Vector3 position)
     {
         List<CardInfo> cardInfos = GameManager.currentPlayer.cardList;
-        float width = 0;
-        int idx = 0;
+        int idx = CheckCardPosition(position);
 
-        while (width < position.x)
-        {
-            width += 100; // 수치 바꾸기
-            idx++;
-        }
+        if (idx-1 >= 0) cardInfos[idx-1].ShowLine = false;
 
-        if (width - 100 / 2 >= position.x) idx--;
-
-        if (idx < cardInfos.Count)
+        if (idx < GameManager.currentPlayer.cardList.Count)
         {
             Debug.Log("Insert at " + idx);
-            GameManager.currentPlayer.cardList.Insert(idx, removedCard);
+            cardInfos.Insert(idx, removedCard);
         }
         else
         {
             Debug.Log("Add at last");
-            GameManager.currentPlayer.cardList.Add(removedCard);
+            cardInfos.Add(removedCard);
         }
-        RefreshLayoutGroup(GameManager.currentPlayer.cardList);
+        RefreshLayoutGroup(cardInfos);
+    }
+
+    public void InsertLine(Vector3 position)
+    {
+        List<CardInfo> cardInfos = GameManager.currentPlayer.cardList;
+        if (cardInfos.Count == 0) return;
+        int idx = CheckCardPosition(position);
+
+        for (int i = 0; i < cardInfos.Count; i++)
+        {
+            if (idx == i+1) cardInfos[i].ShowLine = true;
+            else cardInfos[i].ShowLine = false;
+        }
+
+        RefreshLayoutGroup(cardInfos);
+    }
+
+    private int CheckCardPosition(Vector3 position)
+    {
+        List<CardInfo> cardInfos = GameManager.currentPlayer.cardList;
+        float width = 0;
+        int idx = 0;
+
+        while (width < position.x && idx < cardInfos.Count)
+        {
+            width += cardInfos[idx].CardType * cardWidthPerPopulation; // 수치 바꾸기
+            idx++;
+        }
+
+        if (width - 100 / 2 >= position.x) idx--;
+        return idx;
     }
 }
