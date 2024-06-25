@@ -178,5 +178,6 @@ public class Player : MonoBehaviour
         }
 
         AddCard(2);
+        GameManager.isComplete = true;
     }
 }

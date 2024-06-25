@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
     [SerializeField] private TextMeshProUGUI EventTimer;
+    [SerializeField] private Button NextTurnBtn;
     private Button[] SelectionPanelButtons;
 
     private int playerNum = 4;
@@ -47,7 +48,7 @@ public class GameManager : MonoBehaviour
     private int currentTurn;
     public static bool isRolled; // 주사위 굴렸는지
     public static int isMoving; // 0: 이동 전 / 1: 이동 중 / 2: 이동 후
-    private bool isComplete; // 턴 종료 가능한지
+    public static bool isComplete; // 턴 종료 가능한지
     public static bool isSelected; // 모집할 때, 버릴 카드 선택했는지
 
     public static Player[] players;
@@ -144,6 +145,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (NextTurnBtn != null)
+            NextTurnBtn.interactable = isComplete;
+
         if (Input.GetKeyDown(KeyCode.Space) && !isRolled)
         {
             StartCoroutine(Dice.Instance.RollDice());
@@ -216,11 +220,6 @@ public class GameManager : MonoBehaviour
 
     public void NextTurn()
     {
-        if (!isComplete)
-        {
-            Debug.Log("아직 턴이 종료되지 않았습니다.");
-            return;
-        }
         players[currentPlayerNum].SetArrow(false);
         currentTurn++;
 
@@ -273,7 +272,6 @@ public class GameManager : MonoBehaviour
     {
         SelectionPanel.SetActive(false);
         StartCoroutine(currentPlayer.SelectDeleteCard());
-        isComplete = true;
     }
 
     // 랜덤 이벤트 생성
