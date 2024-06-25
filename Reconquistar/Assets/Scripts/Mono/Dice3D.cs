@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Dice3D : MonoBehaviour
 {
@@ -10,27 +11,41 @@ public class Dice3D : MonoBehaviour
 
     private bool waitingResult;
     private bool isRolling;
-    private float DiceBoardScope = 4f;
+    public bool IsRolling
+    {
+        get { return isRolling; }
+        set { isRolling = value; }
+    }
+    
+    public static UnityAction<int, int> OnDiceResult;
+    private static float DiceBoardScope = 4f;
+
+    private int diceResult;
+    public int DiceResult
+    {
+        get { return diceResult; }
+        set { diceResult = value; }
+    }
+    private int diceIndex;
+
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         waitingResult = false;
         isRolling = false;
+        diceResult = 0;
         DiceBoardPos = transform.parent.position;
     }
 
     private void Update()
     {
         if (waitingResult) return;
-
-        if (!isRolling && rb.velocity.sqrMagnitude == 0f)
+        
+        if (isRolling && rb.velocity.sqrMagnitude == 0f)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                isRolling = true;
-                RollDice();
-            }
+            isRolling = false;
+            GetDiceResult();
         }
     }
 
@@ -51,23 +66,22 @@ public class Dice3D : MonoBehaviour
         }
     }
 
-    public void RollDice()
+    public void RollDice(int idx)
     {
-        waitingResult = true;
+        diceIndex = idx;
+        isRolling = true;
+
         float randomForce = Random.Range(9f, 11f);
         float rollForce = 1f;
 
-        Debug.Log("Dice Throw Force: " + randomForce);
-        Debug.Log("Dice Roll Force: " + rollForce);
         rb.AddForce(-Physics.gravity.normalized * randomForce, ForceMode.Impulse);
 
         float randX = Random.Range(0f, 1f);
         float randY = Random.Range(0f, 1f);
         float randZ = Random.Range(0f, 1f);
-
         rb.AddTorque(new Vector3(randX, randY, randZ) * rollForce, ForceMode.Impulse);
+
         waitingResult = true;
-        isRolling = false;
         WaitResult();
     }
 
@@ -75,5 +89,24 @@ public class Dice3D : MonoBehaviour
     {
         await Task.Delay(1000);
         waitingResult = false;
+    }
+
+    private void GetDiceResult()
+    {
+        int diceResult = 1;
+        float maxY = transform.GetChild(0).transform.position.y- DiceBoardPos.y;
+
+        for (int i = 1; i < 6; i++)
+        {
+            float py = transform.GetChild(i).transform.position.y - DiceBoardPos.y;
+            if (py > maxY)
+            {
+                diceResult = i+1;
+                maxY = py;
+            }
+        }
+
+        OnDiceResult?.Invoke(diceIndex, diceResult);
+        isRolling = false;
     }
 }
