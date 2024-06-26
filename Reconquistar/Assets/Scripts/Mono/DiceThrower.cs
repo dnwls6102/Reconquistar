@@ -20,7 +20,7 @@ public class DiceThrower : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isRolled && !Dices[0].IsRolling && !Dices[1].IsRolling)
+        if (Input.GetKeyDown(KeyCode.Space) && !Dices[0].IsRolling && !Dices[1].IsRolling)
         {
             TotalDiceNumText.text = "Dice Total: Rolling";
             totalDiceNum = 0;
