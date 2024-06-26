@@ -16,9 +16,9 @@ public class Dice3D : MonoBehaviour
         get { return isRolling; }
         set { isRolling = value; }
     }
-    
+
     public static UnityAction<int, int> OnDiceResult;
-    private static float DiceBoardScope = 4f;
+    private static float DiceBoardScope = 3f;
 
     private int diceResult;
     public int DiceResult
@@ -36,12 +36,15 @@ public class Dice3D : MonoBehaviour
         isRolling = false;
         diceResult = 0;
         DiceBoardPos = transform.parent.position;
+        
+        if (transform.localPosition.x < 0) diceIndex = 0;
+        else diceIndex = 1;
     }
 
     private void Update()
     {
         if (waitingResult) return;
-        
+
         if (isRolling && rb.velocity.sqrMagnitude == 0f)
         {
             isRolling = false;
@@ -51,28 +54,34 @@ public class Dice3D : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float px = transform.position.x - DiceBoardPos.x;
-        float py = transform.position.y - DiceBoardPos.y;
-        float pz = transform.position.z - DiceBoardPos.z;
+        if (rb.velocity.sqrMagnitude < 0.5f) return;
 
-        if (Mathf.Abs(px) > DiceBoardScope)
+        float px = transform.localPosition.x;
+        float pz = transform.localPosition.z;
+
+        float vx = rb.velocity.x;
+        float vy = rb.velocity.y;
+        float vz = rb.velocity.z;
+
+        if ((px < (diceIndex-1) * DiceBoardScope || px > diceIndex * DiceBoardScope) && Mathf.Sign(px) == Mathf.Sign(vx))
         {
-            transform.position = new Vector3(DiceBoardPos.x + DiceBoardScope * Mathf.Sign(px), py, pz);
+            Debug.Log($"{diceIndex}: {rb.velocity.x} {rb.velocity.y} {rb.velocity.z}");
+            rb.velocity = new Vector3(-vx/2, vy, vz);
         }
 
-        if (Mathf.Abs(pz) > DiceBoardScope)
+        if (Mathf.Abs(pz) > DiceBoardScope && Mathf.Sign(pz) == Mathf.Sign(vz))
         {
-            transform.position = new Vector3(px, py, DiceBoardPos.z + DiceBoardScope * Mathf.Sign(pz));
+            Debug.Log($"{diceIndex}: {rb.velocity.x} {rb.velocity.y} {rb.velocity.z}");
+            rb.velocity = new Vector3(vx, vy, -vz/2);
         }
     }
 
-    public void RollDice(int idx)
+    public void RollDice()
     {
-        diceIndex = idx;
         isRolling = true;
 
-        float randomForce = Random.Range(9f, 11f);
-        float rollForce = 1f;
+        float randomForce = Random.Range(30f, 35f);
+        float rollForce = 3f;
 
         rb.AddForce(-Physics.gravity.normalized * randomForce, ForceMode.Impulse);
 
@@ -94,14 +103,14 @@ public class Dice3D : MonoBehaviour
     private void GetDiceResult()
     {
         int diceResult = 1;
-        float maxY = transform.GetChild(0).transform.position.y- DiceBoardPos.y;
+        float maxY = transform.GetChild(0).transform.position.y - DiceBoardPos.y;
 
         for (int i = 1; i < 6; i++)
         {
             float py = transform.GetChild(i).transform.position.y - DiceBoardPos.y;
             if (py > maxY)
             {
-                diceResult = i+1;
+                diceResult = i + 1;
                 maxY = py;
             }
         }

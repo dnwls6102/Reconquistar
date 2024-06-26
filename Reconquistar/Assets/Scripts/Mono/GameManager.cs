@@ -40,14 +40,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject PlayerPrefab;
     [SerializeField] private GameObject SelectionPanel;
     [SerializeField] private TextMeshProUGUI EventTimer;
-    [SerializeField] private Dice3D[] Dices;
     [SerializeField] private TextMeshProUGUI TotalDiceNumText;
 
     private int playerNum = 4;
     public static int currentPlayerNum;
     private int currentTurn;
-    private int totalDiceNum;
-    public static bool isRolled; // 주사위 굴렸는지
     public static int isMoving; // 0: 이동 전 / 1: 이동 중 / 2: 이동 후
     private bool isComplete; // 턴 종료 가능한지
     public static bool isSelected; // 모집할 때, 버릴 카드 선택했는지
@@ -82,16 +79,13 @@ public class GameManager : MonoBehaviour
         }
 
         InitializeCardPool();
-        Dice3D.OnDiceResult += CheckDiceFinish;
         SelectionPanelButtons = SelectionPanel.GetComponentsInChildren<Button>();
     }
 
     private void Start()
     {
         InitializePlayers();
-        isRolled = false;
         isMoving = 0;
-        totalDiceNum = 0;
         isComplete = false;
         isSelected = false;
         TotalDiceNumText.text = "Dice Total: ";
@@ -150,28 +144,9 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && !isRolled && !Dices[0].IsRolling && !Dices[1].IsRolling)
-        {
-            TotalDiceNumText.text = "Dice Total: Rolling";
-            // StartCoroutine(Dice.Instance.RollDice());
-            for (int i = 0; i < Dices.Length; i++)
-            {
-                Dices[i].RollDice(i);
-            }
-        }
+
     }
 
-    private void CheckDiceFinish(int diceIndex, int diceResult)
-    {
-        Debug.Log($"Dice {diceIndex}: {diceResult}");
-        totalDiceNum += diceResult;
-        for (int i = 0; i < Dices.Length; i++)
-        {
-            if (Dices[i].IsRolling) return;
-        }
-        TotalDiceNumText.text = $"Dice Total: {totalDiceNum}";
-        isRolled = true;
-    }
 
     // 라운드 시작 전 플레이어 순서 정렬 + 이벤트 남은 라운드 조정
     private void SortPlayerTurnOrder()
@@ -204,7 +179,7 @@ public class GameManager : MonoBehaviour
     // 이동 버튼 클릭
     public void ArrowBtnClick(bool clockwise)
     {
-        if (!isRolled || isMoving >= 1)
+        if (!DiceThrower.isRolled || isMoving >= 1)
         {
             Debug.Log("이미 이동했거나 주사위를 굴리지 않았습니다.");
             return;
@@ -217,7 +192,7 @@ public class GameManager : MonoBehaviour
     // 이동 -> 다음 플레이어 턴 / selection panel 선택지 조건 확인
     private IEnumerator PlayerTurn(bool clockwise)
     {
-        yield return StartCoroutine(players[currentPlayerNum].PlayerMove(totalDiceNum, clockwise));
+        yield return StartCoroutine(players[currentPlayerNum].PlayerMove(DiceThrower.totalDiceNum, clockwise));
 
         isMoving = 2;
 
@@ -257,9 +232,8 @@ public class GameManager : MonoBehaviour
 
         layoutgroupcontroller.Instance.RefreshLayoutGroup(players[currentPlayerNum].cardList);
         isComplete = false;
-        isRolled = false;
+        DiceThrower.isRolled = false;
         isMoving = 0;
-        totalDiceNum = 0;
     }
 
     // 점령 버튼 클릭 시 작동
