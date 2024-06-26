@@ -39,7 +39,7 @@ public class Dice : MonoBehaviour
         finalDiceValue = Random.Range(1, 7);
         sr.sprite = diceSprites[finalDiceValue - 1];
 
-        GameManager.isRolled = true;
+        // GameManager.isRolled = true;
         isRolling = false;
     }
 }
