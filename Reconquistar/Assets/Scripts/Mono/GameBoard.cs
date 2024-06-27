@@ -85,7 +85,7 @@ public class GameBoard : MonoBehaviour
                 int idx = tilePerLine * i + j;
                 Vector3 loc = vertex[i] - distance * j;
 
-                tile = Instantiate(tileObject, loc, Quaternion.identity);
+                tile = Instantiate(tileObject, loc, Quaternion.identity, transform);
                 mapTile = tile.GetComponent<MapTile>();
 
                 if (idx == 0)
