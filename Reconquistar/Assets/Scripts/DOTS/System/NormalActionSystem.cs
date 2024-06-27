@@ -51,8 +51,9 @@ namespace _1.Scripts.DOTS.System
             {
                 return;
             }
-            if(priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty)
+            if(priorityMoveDoneQuery.IsEmpty && reloadingDoneQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty) //자유 이동 유닛들이 모두 행동 완료 + 재장전 유닛들이 모두 행동 완료 + 자유 공격 유닛들이 행동하지 않았을 때
             {
+                Debug.Log("1차");
                 MapMakerComponentData mapMaker = SystemAPI.GetSingleton<MapMakerComponentData>();
                 NativeArray<Entity> sampleUnits = unitQuery.ToEntityArray(Allocator.TempJob);
                 NativeArray<int2> moves = new(2, Allocator.TempJob);
@@ -61,7 +62,7 @@ namespace _1.Scripts.DOTS.System
                 
                 if (normalActionDoneWithAnyQuery.IsEmpty) //일반 행동을 수행한 유닛이 한명도 없다면? : 이번 턴 처음으로 일반 행동 시작
                 {
-                    //Debug.Log("일반 행동 시작");
+                    Debug.Log("일반 행동 시작");
                     
                     FindNearestJob findNearestJob = new()
                     {
@@ -74,7 +75,7 @@ namespace _1.Scripts.DOTS.System
 
 
                     //총알 생성(AttackTag가 세워진 원거리 유닛들에 대해서만)
-                    foreach (var (bullet, unitEntity) in SystemAPI.Query<RefRO<ShootTag>>().WithAll<AttackTag>().WithEntityAccess())
+                    foreach (var (bullet, unitEntity) in SystemAPI.Query<RefRW<ShootTag>>().WithAll<AttackTag>().WithEntityAccess())
                     {
                         var temp = state.EntityManager.Instantiate(bullet.ValueRO.BulletEntity); //query로 받아온 ShootTag 컴포넌트의 bulletEntity 생성
                         var targetLocation = state.EntityManager.GetComponentData<LocalTransform>(state.EntityManager.GetComponentData<TargetEntityData>(unitEntity).targetEntity);
@@ -86,10 +87,17 @@ namespace _1.Scripts.DOTS.System
                             Scale = SystemAPI.GetComponent<LocalTransform>(unitEntity).Scale,
                         }) ; //총알 엔티티의 transform을 원거리 유닛의 transform으로 설정
                         //생성된 총알 엔티티를 targetEntity의 위치까지 MoveForward로 이동시키기(실제 데미지 계산은 아래 foreach 구문에서 진행)
+                        bullet.ValueRW.bullets -= 1;
                         var bulletLocation = state.EntityManager.GetComponentData<LocalTransform>(temp);
-                        bulletLocation.Position = MovementJob.MoveTowards(bulletLocation.Position, targetLocation.Position, SystemAPI.GetComponent<Bullet>(temp).velocity * Time.deltaTime);
+                        //bulletLocation.Position = MovementJob.MoveTowards(bulletLocation.Position, targetLocation.Position, SystemAPI.GetComponent<Bullet>(temp).velocity * Time.deltaTime);
+                        bulletLocation.Position += bullet.ValueRO.velocity * SystemAPI.Time.DeltaTime;
+                        if (bulletLocation.Position.y == targetLocation.Position.y)
+                        {
+                            ecb.DestroyEntity(temp);
+                        }
+
                     }
-                    
+
                     foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                     {
                         if (unit.ValueRW.hp <= 0)

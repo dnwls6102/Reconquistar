@@ -12,6 +12,7 @@ public class SampleShootingUnitAuthoring : MonoBehaviour
     public int bullet;
     public int maxNum; //최대 총알 갯수
     public int range;
+    public int vel;
     public GameObject bulletEntity;
     public class SampleShootingUnitAuthoringBaker : Baker<SampleShootingUnitAuthoring>
     {
@@ -31,7 +32,8 @@ public class SampleShootingUnitAuthoring : MonoBehaviour
                 bullets = authoring.bullet,
                 BulletEntity = GetEntity(authoring.bulletEntity, TransformUsageFlags.Dynamic),
                 Maxbullets = authoring.maxNum,
-            });
+                velocity = authoring.vel
+            }) ;
             AddComponent(entity, new MovingTag());
             AddComponent(entity, new AttackTag());
             AddComponent(entity, new LazyTag());
@@ -48,6 +50,7 @@ public struct ShootTag : IComponentData
     public int bullets; //총알 / 화살 잔량
     public Entity BulletEntity; //총알 엔티티
     public int Maxbullets; //최대 총알 / 화살 잔량
+    public int velocity; //투사체 속도
 }
 
 //SampleUnitAuthoring, TargetEntityData는 SampleUnitAuthoring.cs에 있음

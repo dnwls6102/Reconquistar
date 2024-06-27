@@ -14,7 +14,7 @@ namespace _1.Scrpits.DOTS.Authoring_baker_
                 var entity = GetEntity(TransformUsageFlags.Dynamic);
                 AddComponent(entity, new Bullet
                 {
-                    velocity = authoring.vel,
+                    //velocity = authoring.vel,
                 });
             }
         }
@@ -22,6 +22,6 @@ namespace _1.Scrpits.DOTS.Authoring_baker_
 
     public struct Bullet : IComponentData
     {
-        public float velocity;
+        //public float velocity;
     }
 }

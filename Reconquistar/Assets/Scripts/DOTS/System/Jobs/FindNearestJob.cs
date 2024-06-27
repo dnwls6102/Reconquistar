@@ -64,7 +64,13 @@ namespace _1.Scripts.DOTS.System.Jobs
                 else
                 {
                     doneTag.ValueRW = true;
+                    attackTag.ValueRW = false;
                 }
+            }
+            else
+            {
+                attackTag.ValueRW = false;
+                doneTag.ValueRW = true;
             }
             
         }

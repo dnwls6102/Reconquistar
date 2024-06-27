@@ -195,6 +195,11 @@ namespace _1.Scripts.DOTS.System
                         team = newteam,
                         range = 3,
                     });
+                    /*ecb.SetComponentForLinkedEntityGroup(SampleSUnit, shootingQueryMask, new ShootTag
+                    {
+                        bullets = 0,
+                        Maxbullets = 1,
+                    });*/
                     ecb.SetComponentEnabled<MovingTag>(SampleSUnit, false);
                     ecb.SetComponentEnabled<AttackTag>(SampleSUnit, false);
                     ecb.SetComponentEnabled<LazyTag>(SampleSUnit, false);

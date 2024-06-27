@@ -36,7 +36,7 @@ public partial struct ReloadSystem : ISystem
         //이전 행동(자유이동)이 완료 되었는가?
         if (priorityMoveDoneQuery.IsEmpty && priorityAttackDoneWithAnyQuery.IsEmpty && normalActionDoneWithAnyQuery.IsEmpty)
         {
-            Debug.Log("2");
+            //Debug.Log("Reloading");
             ReloadJob reloadJob = new();
             reloadJob.ScheduleParallel();
             state.Dependency.Complete();

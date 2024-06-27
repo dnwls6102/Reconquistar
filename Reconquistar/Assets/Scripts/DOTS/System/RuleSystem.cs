@@ -104,7 +104,7 @@ namespace _1.Scripts.DOTS.System
                 
                 foreach (var (unit, entity) in SystemAPI.Query<RefRW<SampleUnitComponentData>>().WithEntityAccess())
                 {
-//                    Debug.Log("334");
+                    Debug.Log("초기화 작업");
                         if (pMoveReset.HasComponent(entity))
                         {
                             pMoveReset.SetComponentEnabled(entity,false);
