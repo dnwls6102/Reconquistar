@@ -65,13 +65,11 @@ public class Dice3D : MonoBehaviour
 
         if ((px < (diceIndex-1) * DiceBoardScope || px > diceIndex * DiceBoardScope) && Mathf.Sign(px) == Mathf.Sign(vx))
         {
-            Debug.Log($"{diceIndex}: {rb.velocity.x} {rb.velocity.y} {rb.velocity.z}");
             rb.velocity = new Vector3(-vx/2, vy, vz);
         }
 
         if (Mathf.Abs(pz) > DiceBoardScope && Mathf.Sign(pz) == Mathf.Sign(vz))
         {
-            Debug.Log($"{diceIndex}: {rb.velocity.x} {rb.velocity.y} {rb.velocity.z}");
             rb.velocity = new Vector3(vx, vy, -vz/2);
         }
     }

@@ -145,6 +145,8 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
+        if (NextTurnBtn != null)
+            NextTurnBtn.interactable = isComplete;
 
     }
 
